@@ -1,0 +1,6 @@
+build/
+dist/
+pytinyfd/__pycache__/
+pytinyfd/*.pyd
+venv/
+*.pyd
