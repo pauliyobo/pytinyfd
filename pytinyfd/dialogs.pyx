@@ -25,8 +25,14 @@ class Input(Enum):
 def  notify_popup(title, message, icon_type=Icon.INFO):
     return tinyfd_notifyPopupW(title, message, icon_type.value)
 
-def message_box(title, message, dialog_type=DialogTypes.OK, icon_type=Icon.INFO, default_button=Button.OK):
+def message_box(title, message, dialog_type=DialogType.OK, icon_type=Icon.INFO, default_button=Button.OK):
     return tinyfd_messageBoxW(title, message, dialog_type.value, icon_type.value, default_button.value)
+
+def input_box(title, message, input_type=Input.TEXT):
+    cdef wchar_t * data = tinyfd_inputBoxW(title, message, input_type.value)
+    if data == NULL:
+        return None
+    return data
 
 def save_dialog(title, default_path_and_file, num_of_filter_patterns=0, filter_patterns="", filter_description=""):
     return tinyfd_saveFileDialogW(title, default_path_and_file, num_of_filter_patterns, NULL, filter_description)
