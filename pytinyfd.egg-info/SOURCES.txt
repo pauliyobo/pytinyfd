@@ -1,0 +1,8 @@
+README.md
+setup.py
+lib/tinyfiledialogs.c
+pytinyfd/dialogs.c
+pytinyfd.egg-info/PKG-INFO
+pytinyfd.egg-info/SOURCES.txt
+pytinyfd.egg-info/dependency_links.txt
+pytinyfd.egg-info/top_level.txt

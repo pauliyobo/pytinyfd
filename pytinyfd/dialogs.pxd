@@ -26,7 +26,7 @@ cdef extern from "../lib/tinyfiledialogs.h":
         const wchar_t** aFilterPatterns,
         const wchar_t aSingleFilterDescription
     )
-    wchar_tn* tinyfd_openFileDialogW(
+    wchar_t* tinyfd_openFileDialogW(
         const wchar_t* aTitle,
         const wchar_t* aDefaultPathAndFile,
         int aNumOfFilterPatterns,
