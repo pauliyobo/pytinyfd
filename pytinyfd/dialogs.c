@@ -638,6 +638,8 @@ static CYTHON_INLINE float __PYX_NAN() {
 #define __PYX_HAVE_API__pytinyfd__dialogs
 /* Early includes */
 #include "../lib/tinyfiledialogs.h"
+#include <string.h>
+#include <stdlib.h>
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -915,6 +917,16 @@ static const char *__pyx_f[] = {
 #define __Pyx_CLEAR(r)    do { PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);} while(0)
 #define __Pyx_XCLEAR(r)   do { if((r) != NULL) {PyObject* tmp = ((PyObject*)(r)); r = NULL; __Pyx_DECREF(tmp);}} while(0)
 
+/* PyObjectGetAttrStr.proto */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name);
+#else
+#define __Pyx_PyObject_GetAttrStr(o,n) PyObject_GetAttr(o,n)
+#endif
+
+/* GetBuiltinName.proto */
+static PyObject *__Pyx_GetBuiltinName(PyObject *name);
+
 /* RaiseArgTupleInvalid.proto */
 static void __Pyx_RaiseArgtupleInvalid(const char* func_name, int exact,
     Py_ssize_t num_min, Py_ssize_t num_max, Py_ssize_t num_found);
@@ -933,11 +945,137 @@ static int __Pyx_ParseOptionalKeywords(PyObject *kwds, PyObject **argnames[],\
         __Pyx__ArgTypeTest(obj, type, name, exact))
 static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *name, int exact);
 
-/* PyObjectGetAttrStr.proto */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name);
+/* PyObjectCall.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw);
 #else
-#define __Pyx_PyObject_GetAttrStr(o,n) PyObject_GetAttr(o,n)
+#define __Pyx_PyObject_Call(func, arg, kw) PyObject_Call(func, arg, kw)
+#endif
+
+/* UnpackUnboundCMethod.proto */
+typedef struct {
+    PyObject *type;
+    PyObject **method_name;
+    PyCFunction func;
+    PyObject *method;
+    int flag;
+} __Pyx_CachedCFunction;
+
+/* CallUnboundCMethod0.proto */
+static PyObject* __Pyx__CallUnboundCMethod0(__Pyx_CachedCFunction* cfunc, PyObject* self);
+#if CYTHON_COMPILING_IN_CPYTHON
+#define __Pyx_CallUnboundCMethod0(cfunc, self)\
+    (likely((cfunc)->func) ?\
+        (likely((cfunc)->flag == METH_NOARGS) ?  (*((cfunc)->func))(self, NULL) :\
+         (PY_VERSION_HEX >= 0x030600B1 && likely((cfunc)->flag == METH_FASTCALL) ?\
+            (PY_VERSION_HEX >= 0x030700A0 ?\
+                (*(__Pyx_PyCFunctionFast)(void*)(PyCFunction)(cfunc)->func)(self, &__pyx_empty_tuple, 0) :\
+                (*(__Pyx_PyCFunctionFastWithKeywords)(void*)(PyCFunction)(cfunc)->func)(self, &__pyx_empty_tuple, 0, NULL)) :\
+          (PY_VERSION_HEX >= 0x030700A0 && (cfunc)->flag == (METH_FASTCALL | METH_KEYWORDS) ?\
+            (*(__Pyx_PyCFunctionFastWithKeywords)(void*)(PyCFunction)(cfunc)->func)(self, &__pyx_empty_tuple, 0, NULL) :\
+            (likely((cfunc)->flag == (METH_VARARGS | METH_KEYWORDS)) ?  ((*(PyCFunctionWithKeywords)(void*)(PyCFunction)(cfunc)->func)(self, __pyx_empty_tuple, NULL)) :\
+               ((cfunc)->flag == METH_VARARGS ?  (*((cfunc)->func))(self, __pyx_empty_tuple) :\
+               __Pyx__CallUnboundCMethod0(cfunc, self)))))) :\
+        __Pyx__CallUnboundCMethod0(cfunc, self))
+#else
+#define __Pyx_CallUnboundCMethod0(cfunc, self)  __Pyx__CallUnboundCMethod0(cfunc, self)
+#endif
+
+/* IncludeStringH.proto */
+#include <string.h>
+
+/* decode_c_string_utf16.proto */
+static CYTHON_INLINE PyObject *__Pyx_PyUnicode_DecodeUTF16(const char *s, Py_ssize_t size, const char *errors) {
+    int byteorder = 0;
+    return PyUnicode_DecodeUTF16(s, size, errors, &byteorder);
+}
+static CYTHON_INLINE PyObject *__Pyx_PyUnicode_DecodeUTF16LE(const char *s, Py_ssize_t size, const char *errors) {
+    int byteorder = -1;
+    return PyUnicode_DecodeUTF16(s, size, errors, &byteorder);
+}
+static CYTHON_INLINE PyObject *__Pyx_PyUnicode_DecodeUTF16BE(const char *s, Py_ssize_t size, const char *errors) {
+    int byteorder = 1;
+    return PyUnicode_DecodeUTF16(s, size, errors, &byteorder);
+}
+
+/* decode_c_string.proto */
+static CYTHON_INLINE PyObject* __Pyx_decode_c_string(
+         const char* cstring, Py_ssize_t start, Py_ssize_t stop,
+         const char* encoding, const char* errors,
+         PyObject* (*decode_func)(const char *s, Py_ssize_t size, const char *errors));
+
+/* PyCFunctionFastCall.proto */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
+#else
+#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
+#endif
+
+/* PyFunctionFastCall.proto */
+#if CYTHON_FAST_PYCALL
+#define __Pyx_PyFunction_FastCall(func, args, nargs)\
+    __Pyx_PyFunction_FastCallDict((func), (args), (nargs), NULL)
+#if 1 || PY_VERSION_HEX < 0x030600B1
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs);
+#else
+#define __Pyx_PyFunction_FastCallDict(func, args, nargs, kwargs) _PyFunction_FastCallDict(func, args, nargs, kwargs)
+#endif
+#define __Pyx_BUILD_ASSERT_EXPR(cond)\
+    (sizeof(char [1 - 2*!(cond)]) - 1)
+#ifndef Py_MEMBER_SIZE
+#define Py_MEMBER_SIZE(type, member) sizeof(((type *)0)->member)
+#endif
+  static size_t __pyx_pyframe_localsplus_offset = 0;
+  #include "frameobject.h"
+  #define __Pxy_PyFrame_Initialize_Offsets()\
+    ((void)__Pyx_BUILD_ASSERT_EXPR(sizeof(PyFrameObject) == offsetof(PyFrameObject, f_localsplus) + Py_MEMBER_SIZE(PyFrameObject, f_localsplus)),\
+     (void)(__pyx_pyframe_localsplus_offset = ((size_t)PyFrame_Type.tp_basicsize) - Py_MEMBER_SIZE(PyFrameObject, f_localsplus)))
+  #define __Pyx_PyFrame_GetLocalsplus(frame)\
+    (assert(__pyx_pyframe_localsplus_offset), (PyObject **)(((char *)(frame)) + __pyx_pyframe_localsplus_offset))
+#endif
+
+/* PyObjectCallMethO.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg);
+#endif
+
+/* PyObjectCallOneArg.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
+
+/* GetItemInt.proto */
+#define __Pyx_GetItemInt(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
+    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
+    __Pyx_GetItemInt_Fast(o, (Py_ssize_t)i, is_list, wraparound, boundscheck) :\
+    (is_list ? (PyErr_SetString(PyExc_IndexError, "list index out of range"), (PyObject*)NULL) :\
+               __Pyx_GetItemInt_Generic(o, to_py_func(i))))
+#define __Pyx_GetItemInt_List(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
+    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
+    __Pyx_GetItemInt_List_Fast(o, (Py_ssize_t)i, wraparound, boundscheck) :\
+    (PyErr_SetString(PyExc_IndexError, "list index out of range"), (PyObject*)NULL))
+static CYTHON_INLINE PyObject *__Pyx_GetItemInt_List_Fast(PyObject *o, Py_ssize_t i,
+                                                              int wraparound, int boundscheck);
+#define __Pyx_GetItemInt_Tuple(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
+    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
+    __Pyx_GetItemInt_Tuple_Fast(o, (Py_ssize_t)i, wraparound, boundscheck) :\
+    (PyErr_SetString(PyExc_IndexError, "tuple index out of range"), (PyObject*)NULL))
+static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Tuple_Fast(PyObject *o, Py_ssize_t i,
+                                                              int wraparound, int boundscheck);
+static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j);
+static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i,
+                                                     int is_list, int wraparound, int boundscheck);
+
+/* ObjectGetItem.proto */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject* key);
+#else
+#define __Pyx_PyObject_GetItem(obj, key)  PyObject_GetItem(obj, key)
+#endif
+
+/* PyObjectCallNoArg.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
+#else
+#define __Pyx_PyObject_CallNoArg(func) __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL)
 #endif
 
 /* Import.proto */
@@ -945,9 +1083,6 @@ static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level);
 
 /* ImportFrom.proto */
 static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name);
-
-/* GetBuiltinName.proto */
-static PyObject *__Pyx_GetBuiltinName(PyObject *name);
 
 /* PyDictVersioning.proto */
 #if CYTHON_USE_DICT_VERSIONS && CYTHON_USE_TYPE_SLOTS
@@ -1061,11 +1196,11 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
-/* ObjectAsPyUnicode.proto */
-static CYTHON_INLINE Py_UNICODE __Pyx_PyObject_AsPy_UNICODE(PyObject*);
-
 /* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
+
+/* CIntFromPy.proto */
+static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
@@ -1093,27 +1228,39 @@ static int __Pyx_check_binary_version(void);
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 
+/* Module declarations from 'libc.string' */
+
+/* Module declarations from 'libc.stdlib' */
+
 /* Module declarations from 'pytinyfd.dialogs' */
 #define __Pyx_MODULE_NAME "pytinyfd.dialogs"
 extern int __pyx_module_is_main_pytinyfd__dialogs;
 int __pyx_module_is_main_pytinyfd__dialogs = 0;
 
 /* Implementation of 'pytinyfd.dialogs' */
-static const char __pyx_k__6[] = "";
+static PyObject *__pyx_builtin_range;
+static const char __pyx_k_i[] = "i";
+static const char __pyx_k__7[] = "";
 static const char __pyx_k_ok[] = "ok";
+static const char __pyx_k_List[] = "List";
 static const char __pyx_k_data[] = "data";
 static const char __pyx_k_info[] = "info";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_error[] = "error";
+static const char __pyx_k_range[] = "range";
 static const char __pyx_k_title[] = "title";
 static const char __pyx_k_yesno[] = "yesno";
+static const char __pyx_k_c_path[] = "c_path";
 static const char __pyx_k_cancel[] = "cancel";
+static const char __pyx_k_encode[] = "encode";
 static const char __pyx_k_import[] = "__import__";
 static const char __pyx_k_result[] = "result";
 static const char __pyx_k_typing[] = "typing";
+static const char __pyx_k_c_title[] = "c_title";
 static const char __pyx_k_message[] = "message";
+static const char __pyx_k_pattern[] = "pattern";
 static const char __pyx_k_warning[] = "warning";
 static const char __pyx_k_Optional[] = "Optional";
 static const char __pyx_k_question[] = "question";
@@ -1131,12 +1278,14 @@ static const char __pyx_k_ICON_WARNING[] = "ICON_WARNING";
 static const char __pyx_k_notify_popup[] = "notify_popup";
 static const char __pyx_k_BUTTON_CANCEL[] = "BUTTON_CANCEL";
 static const char __pyx_k_ICON_QUESTION[] = "ICON_QUESTION";
+static const char __pyx_k_c_description[] = "c_description";
 static const char __pyx_k_DIALOG_TYPE_OK[] = "DIALOG_TYPE_OK";
 static const char __pyx_k_INPUT_PASSWORD[] = "INPUT_PASSWORD";
 static const char __pyx_k_default_button[] = "default_button";
 static const char __pyx_k_filter_patterns[] = "filter_patterns";
 static const char __pyx_k_pytinyfd_dialogs[] = "pytinyfd.dialogs";
 static const char __pyx_k_DIALOG_TYPE_YESNO[] = "DIALOG_TYPE_YESNO";
+static const char __pyx_k_c_filter_patterns[] = "c_filter_patterns";
 static const char __pyx_k_DIALOG_TYPE_CANCEL[] = "DIALOG_TYPE_CANCEL";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_filter_description[] = "filter_description";
@@ -1154,17 +1303,24 @@ static PyObject *__pyx_n_s_ICON_QUESTION;
 static PyObject *__pyx_n_s_ICON_WARNING;
 static PyObject *__pyx_n_s_INPUT_PASSWORD;
 static PyObject *__pyx_n_s_INPUT_TEXT;
+static PyObject *__pyx_n_s_List;
 static PyObject *__pyx_n_s_Optional;
-static PyObject *__pyx_kp_s__6;
+static PyObject *__pyx_kp_s__7;
+static PyObject *__pyx_n_s_c_description;
+static PyObject *__pyx_n_s_c_filter_patterns;
+static PyObject *__pyx_n_s_c_path;
+static PyObject *__pyx_n_s_c_title;
 static PyObject *__pyx_n_s_cancel;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_data;
 static PyObject *__pyx_n_s_default_button;
 static PyObject *__pyx_n_s_default_path_and_file;
 static PyObject *__pyx_n_s_dialog_type;
+static PyObject *__pyx_n_s_encode;
 static PyObject *__pyx_n_s_error;
 static PyObject *__pyx_n_s_filter_description;
 static PyObject *__pyx_n_s_filter_patterns;
+static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_icon_type;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_info;
@@ -1177,9 +1333,11 @@ static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_notify_popup;
 static PyObject *__pyx_n_s_num_of_filter_patterns;
 static PyObject *__pyx_n_s_ok;
+static PyObject *__pyx_n_s_pattern;
 static PyObject *__pyx_n_s_pytinyfd_dialogs;
 static PyObject *__pyx_kp_s_pytinyfd_dialogs_pyx;
 static PyObject *__pyx_n_s_question;
+static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_result;
 static PyObject *__pyx_n_s_save_dialog;
 static PyObject *__pyx_n_s_test;
@@ -1190,7 +1348,8 @@ static PyObject *__pyx_n_s_yesno;
 static PyObject *__pyx_pf_8pytinyfd_7dialogs_notify_popup(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_title, PyObject *__pyx_v_message, PyObject *__pyx_v_icon_type); /* proto */
 static PyObject *__pyx_pf_8pytinyfd_7dialogs_2message_box(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_title, PyObject *__pyx_v_message, PyObject *__pyx_v_dialog_type, PyObject *__pyx_v_icon_type, PyObject *__pyx_v_default_button); /* proto */
 static PyObject *__pyx_pf_8pytinyfd_7dialogs_4input_box(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_title, PyObject *__pyx_v_message, PyObject *__pyx_v_input_type); /* proto */
-static PyObject *__pyx_pf_8pytinyfd_7dialogs_6save_dialog(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_title, PyObject *__pyx_v_default_path_and_file, PyObject *__pyx_v_num_of_filter_patterns, CYTHON_UNUSED PyObject *__pyx_v_filter_patterns, PyObject *__pyx_v_filter_description); /* proto */
+static PyObject *__pyx_pf_8pytinyfd_7dialogs_6save_dialog(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_title, PyObject *__pyx_v_default_path_and_file, PyObject *__pyx_v_filter_patterns, PyObject *__pyx_v_filter_description); /* proto */
+static __Pyx_CachedCFunction __pyx_umethod_PyString_Type_encode = {0, &__pyx_n_s_encode, 0, 0, 0};
 static PyObject *__pyx_int_0;
 static PyObject *__pyx_int_1;
 static PyObject *__pyx_k_;
@@ -1198,22 +1357,23 @@ static PyObject *__pyx_k__2;
 static PyObject *__pyx_k__3;
 static PyObject *__pyx_k__4;
 static PyObject *__pyx_k__5;
-static PyObject *__pyx_tuple__7;
-static PyObject *__pyx_tuple__9;
-static PyObject *__pyx_tuple__11;
-static PyObject *__pyx_tuple__13;
-static PyObject *__pyx_codeobj__8;
-static PyObject *__pyx_codeobj__10;
-static PyObject *__pyx_codeobj__12;
-static PyObject *__pyx_codeobj__14;
+static PyObject *__pyx_k__6;
+static PyObject *__pyx_tuple__8;
+static PyObject *__pyx_tuple__10;
+static PyObject *__pyx_tuple__12;
+static PyObject *__pyx_tuple__14;
+static PyObject *__pyx_codeobj__9;
+static PyObject *__pyx_codeobj__11;
+static PyObject *__pyx_codeobj__13;
+static PyObject *__pyx_codeobj__15;
 /* Late includes */
 
-/* "pytinyfd/dialogs.pyx":25
+/* "pytinyfd/dialogs.pyx":28
  * 
  * 
  * def  notify_popup(title: str, message: str, icon_type: str=ICON_INFO) -> int:             # <<<<<<<<<<<<<<
- *     return tinyfd_notifyPopupW(title, message, icon_type)
- * 
+ *     title = title.encode()
+ *     message = message.encode()
  */
 
 /* Python wrapper */
@@ -1255,7 +1415,7 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_1notify_popup(PyObject *__pyx_self,
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_message)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("notify_popup", 0, 2, 3, 1); __PYX_ERR(0, 25, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("notify_popup", 0, 2, 3, 1); __PYX_ERR(0, 28, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -1265,7 +1425,7 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_1notify_popup(PyObject *__pyx_self,
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "notify_popup") < 0)) __PYX_ERR(0, 25, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "notify_popup") < 0)) __PYX_ERR(0, 28, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -1283,15 +1443,15 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_1notify_popup(PyObject *__pyx_self,
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("notify_popup", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 25, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("notify_popup", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 28, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("pytinyfd.dialogs.notify_popup", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_title), (&PyString_Type), 1, "title", 1))) __PYX_ERR(0, 25, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_message), (&PyString_Type), 1, "message", 1))) __PYX_ERR(0, 25, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_icon_type), (&PyString_Type), 1, "icon_type", 1))) __PYX_ERR(0, 25, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_title), (&PyString_Type), 1, "title", 1))) __PYX_ERR(0, 28, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_message), (&PyString_Type), 1, "message", 1))) __PYX_ERR(0, 28, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_icon_type), (&PyString_Type), 1, "icon_type", 1))) __PYX_ERR(0, 28, __pyx_L1_error)
   __pyx_r = __pyx_pf_8pytinyfd_7dialogs_notify_popup(__pyx_self, __pyx_v_title, __pyx_v_message, __pyx_v_icon_type);
 
   /* function exit code */
@@ -1306,57 +1466,102 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_1notify_popup(PyObject *__pyx_self,
 static PyObject *__pyx_pf_8pytinyfd_7dialogs_notify_popup(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_title, PyObject *__pyx_v_message, PyObject *__pyx_v_icon_type) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  wchar_t const *__pyx_t_1;
-  wchar_t const *__pyx_t_2;
-  wchar_t const *__pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_1 = NULL;
+  char const *__pyx_t_2;
+  char const *__pyx_t_3;
+  char const *__pyx_t_4;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("notify_popup", 0);
+  __Pyx_INCREF(__pyx_v_title);
+  __Pyx_INCREF(__pyx_v_message);
+  __Pyx_INCREF(__pyx_v_icon_type);
 
-  /* "pytinyfd/dialogs.pyx":26
+  /* "pytinyfd/dialogs.pyx":29
  * 
  * def  notify_popup(title: str, message: str, icon_type: str=ICON_INFO) -> int:
- *     return tinyfd_notifyPopupW(title, message, icon_type)             # <<<<<<<<<<<<<<
+ *     title = title.encode()             # <<<<<<<<<<<<<<
+ *     message = message.encode()
+ *     icon_type = icon_type.encode()
+ */
+  __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyString_Type_encode, __pyx_v_title); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_DECREF_SET(__pyx_v_title, ((PyObject*)__pyx_t_1));
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":30
+ * def  notify_popup(title: str, message: str, icon_type: str=ICON_INFO) -> int:
+ *     title = title.encode()
+ *     message = message.encode()             # <<<<<<<<<<<<<<
+ *     icon_type = icon_type.encode()
+ *     return tinyfd_notifyPopup(title, message, icon_type)
+ */
+  __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyString_Type_encode, __pyx_v_message); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_DECREF_SET(__pyx_v_message, ((PyObject*)__pyx_t_1));
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":31
+ *     title = title.encode()
+ *     message = message.encode()
+ *     icon_type = icon_type.encode()             # <<<<<<<<<<<<<<
+ *     return tinyfd_notifyPopup(title, message, icon_type)
+ * 
+ */
+  __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyString_Type_encode, __pyx_v_icon_type); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 31, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 31, __pyx_L1_error)
+  __Pyx_DECREF_SET(__pyx_v_icon_type, ((PyObject*)__pyx_t_1));
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":32
+ *     message = message.encode()
+ *     icon_type = icon_type.encode()
+ *     return tinyfd_notifyPopup(title, message, icon_type)             # <<<<<<<<<<<<<<
  * 
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyUnicode_AsUnicode(__pyx_v_title); if (unlikely((!__pyx_t_1) && PyErr_Occurred())) __PYX_ERR(0, 26, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyUnicode_AsUnicode(__pyx_v_message); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(0, 26, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyUnicode_AsUnicode(__pyx_v_icon_type); if (unlikely((!__pyx_t_3) && PyErr_Occurred())) __PYX_ERR(0, 26, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyInt_From_int(tinyfd_notifyPopupW(__pyx_t_1, __pyx_t_2, __pyx_t_3)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 26, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_r = __pyx_t_4;
-  __pyx_t_4 = 0;
+  __pyx_t_2 = __Pyx_PyObject_AsString(__pyx_v_title); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_AsString(__pyx_v_message); if (unlikely((!__pyx_t_3) && PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_AsString(__pyx_v_icon_type); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(tinyfd_notifyPopup(__pyx_t_2, __pyx_t_3, __pyx_t_4)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 32, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "pytinyfd/dialogs.pyx":25
+  /* "pytinyfd/dialogs.pyx":28
  * 
  * 
  * def  notify_popup(title: str, message: str, icon_type: str=ICON_INFO) -> int:             # <<<<<<<<<<<<<<
- *     return tinyfd_notifyPopupW(title, message, icon_type)
- * 
+ *     title = title.encode()
+ *     message = message.encode()
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_1);
   __Pyx_AddTraceback("pytinyfd.dialogs.notify_popup", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_title);
+  __Pyx_XDECREF(__pyx_v_message);
+  __Pyx_XDECREF(__pyx_v_icon_type);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "pytinyfd/dialogs.pyx":29
+/* "pytinyfd/dialogs.pyx":35
  * 
  * 
  * def message_box(title: str, message: str, dialog_type: str=DIALOG_TYPE_OK, icon_type: str=ICON_INFO, default_button: int=BUTTON_OK) -> int:             # <<<<<<<<<<<<<<
- *     return tinyfd_messageBoxW(title, message, dialog_type, icon_type, default_button)
- * 
+ *     title = title.encode()
+ *     message = message.encode()
  */
 
 /* Python wrapper */
@@ -1406,7 +1611,7 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_3message_box(PyObject *__pyx_self, 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_message)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("message_box", 0, 2, 5, 1); __PYX_ERR(0, 29, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("message_box", 0, 2, 5, 1); __PYX_ERR(0, 35, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -1428,7 +1633,7 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_3message_box(PyObject *__pyx_self, 
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "message_box") < 0)) __PYX_ERR(0, 29, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "message_box") < 0)) __PYX_ERR(0, 35, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -1452,16 +1657,16 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_3message_box(PyObject *__pyx_self, 
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("message_box", 0, 2, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 29, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("message_box", 0, 2, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 35, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("pytinyfd.dialogs.message_box", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_title), (&PyString_Type), 1, "title", 1))) __PYX_ERR(0, 29, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_message), (&PyString_Type), 1, "message", 1))) __PYX_ERR(0, 29, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_dialog_type), (&PyString_Type), 1, "dialog_type", 1))) __PYX_ERR(0, 29, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_icon_type), (&PyString_Type), 1, "icon_type", 1))) __PYX_ERR(0, 29, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_title), (&PyString_Type), 1, "title", 1))) __PYX_ERR(0, 35, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_message), (&PyString_Type), 1, "message", 1))) __PYX_ERR(0, 35, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_dialog_type), (&PyString_Type), 1, "dialog_type", 1))) __PYX_ERR(0, 35, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_icon_type), (&PyString_Type), 1, "icon_type", 1))) __PYX_ERR(0, 35, __pyx_L1_error)
   __pyx_r = __pyx_pf_8pytinyfd_7dialogs_2message_box(__pyx_self, __pyx_v_title, __pyx_v_message, __pyx_v_dialog_type, __pyx_v_icon_type, __pyx_v_default_button);
 
   /* function exit code */
@@ -1476,61 +1681,121 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_3message_box(PyObject *__pyx_self, 
 static PyObject *__pyx_pf_8pytinyfd_7dialogs_2message_box(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_title, PyObject *__pyx_v_message, PyObject *__pyx_v_dialog_type, PyObject *__pyx_v_icon_type, PyObject *__pyx_v_default_button) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  wchar_t const *__pyx_t_1;
-  wchar_t const *__pyx_t_2;
-  wchar_t const *__pyx_t_3;
-  wchar_t const *__pyx_t_4;
-  int __pyx_t_5;
-  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_1 = NULL;
+  char const *__pyx_t_2;
+  char const *__pyx_t_3;
+  char const *__pyx_t_4;
+  char const *__pyx_t_5;
+  int __pyx_t_6;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("message_box", 0);
+  __Pyx_INCREF(__pyx_v_title);
+  __Pyx_INCREF(__pyx_v_message);
+  __Pyx_INCREF(__pyx_v_dialog_type);
+  __Pyx_INCREF(__pyx_v_icon_type);
 
-  /* "pytinyfd/dialogs.pyx":30
+  /* "pytinyfd/dialogs.pyx":36
  * 
  * def message_box(title: str, message: str, dialog_type: str=DIALOG_TYPE_OK, icon_type: str=ICON_INFO, default_button: int=BUTTON_OK) -> int:
- *     return tinyfd_messageBoxW(title, message, dialog_type, icon_type, default_button)             # <<<<<<<<<<<<<<
+ *     title = title.encode()             # <<<<<<<<<<<<<<
+ *     message = message.encode()
+ *     dialog_type = dialog_type.encode()
+ */
+  __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyString_Type_encode, __pyx_v_title); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 36, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 36, __pyx_L1_error)
+  __Pyx_DECREF_SET(__pyx_v_title, ((PyObject*)__pyx_t_1));
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":37
+ * def message_box(title: str, message: str, dialog_type: str=DIALOG_TYPE_OK, icon_type: str=ICON_INFO, default_button: int=BUTTON_OK) -> int:
+ *     title = title.encode()
+ *     message = message.encode()             # <<<<<<<<<<<<<<
+ *     dialog_type = dialog_type.encode()
+ *     icon_type = icon_type.encode()
+ */
+  __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyString_Type_encode, __pyx_v_message); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 37, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 37, __pyx_L1_error)
+  __Pyx_DECREF_SET(__pyx_v_message, ((PyObject*)__pyx_t_1));
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":38
+ *     title = title.encode()
+ *     message = message.encode()
+ *     dialog_type = dialog_type.encode()             # <<<<<<<<<<<<<<
+ *     icon_type = icon_type.encode()
+ *     return tinyfd_messageBox(title, message, dialog_type, icon_type, default_button)
+ */
+  __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyString_Type_encode, __pyx_v_dialog_type); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 38, __pyx_L1_error)
+  __Pyx_DECREF_SET(__pyx_v_dialog_type, ((PyObject*)__pyx_t_1));
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":39
+ *     message = message.encode()
+ *     dialog_type = dialog_type.encode()
+ *     icon_type = icon_type.encode()             # <<<<<<<<<<<<<<
+ *     return tinyfd_messageBox(title, message, dialog_type, icon_type, default_button)
+ * 
+ */
+  __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyString_Type_encode, __pyx_v_icon_type); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 39, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 39, __pyx_L1_error)
+  __Pyx_DECREF_SET(__pyx_v_icon_type, ((PyObject*)__pyx_t_1));
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":40
+ *     dialog_type = dialog_type.encode()
+ *     icon_type = icon_type.encode()
+ *     return tinyfd_messageBox(title, message, dialog_type, icon_type, default_button)             # <<<<<<<<<<<<<<
  * 
  * def input_box(title: str, message: str, input_type: str=INPUT_TEXT) -> Optional[str]:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyUnicode_AsUnicode(__pyx_v_title); if (unlikely((!__pyx_t_1) && PyErr_Occurred())) __PYX_ERR(0, 30, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyUnicode_AsUnicode(__pyx_v_message); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(0, 30, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyUnicode_AsUnicode(__pyx_v_dialog_type); if (unlikely((!__pyx_t_3) && PyErr_Occurred())) __PYX_ERR(0, 30, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyUnicode_AsUnicode(__pyx_v_icon_type); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 30, __pyx_L1_error)
-  __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_v_default_button); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 30, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyInt_From_int(tinyfd_messageBoxW(__pyx_t_1, __pyx_t_2, __pyx_t_3, __pyx_t_4, __pyx_t_5)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 30, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  __pyx_r = __pyx_t_6;
-  __pyx_t_6 = 0;
+  __pyx_t_2 = __Pyx_PyObject_AsString(__pyx_v_title); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_AsString(__pyx_v_message); if (unlikely((!__pyx_t_3) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_AsString(__pyx_v_dialog_type); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_AsString(__pyx_v_icon_type); if (unlikely((!__pyx_t_5) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_default_button); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(tinyfd_messageBox(__pyx_t_2, __pyx_t_3, __pyx_t_4, __pyx_t_5, __pyx_t_6)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 40, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "pytinyfd/dialogs.pyx":29
+  /* "pytinyfd/dialogs.pyx":35
  * 
  * 
  * def message_box(title: str, message: str, dialog_type: str=DIALOG_TYPE_OK, icon_type: str=ICON_INFO, default_button: int=BUTTON_OK) -> int:             # <<<<<<<<<<<<<<
- *     return tinyfd_messageBoxW(title, message, dialog_type, icon_type, default_button)
- * 
+ *     title = title.encode()
+ *     message = message.encode()
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_1);
   __Pyx_AddTraceback("pytinyfd.dialogs.message_box", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_title);
+  __Pyx_XDECREF(__pyx_v_message);
+  __Pyx_XDECREF(__pyx_v_dialog_type);
+  __Pyx_XDECREF(__pyx_v_icon_type);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "pytinyfd/dialogs.pyx":32
- *     return tinyfd_messageBoxW(title, message, dialog_type, icon_type, default_button)
+/* "pytinyfd/dialogs.pyx":42
+ *     return tinyfd_messageBox(title, message, dialog_type, icon_type, default_button)
  * 
  * def input_box(title: str, message: str, input_type: str=INPUT_TEXT) -> Optional[str]:             # <<<<<<<<<<<<<<
- *     cdef wchar_t * data = tinyfd_inputBoxW(title, message, input_type)
- *     if data == NULL:
+ *     title = title.encode()
+ *     message = message.encode()
  */
 
 /* Python wrapper */
@@ -1572,7 +1837,7 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_5input_box(PyObject *__pyx_self, Py
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_message)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("input_box", 0, 2, 3, 1); __PYX_ERR(0, 32, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("input_box", 0, 2, 3, 1); __PYX_ERR(0, 42, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
@@ -1582,7 +1847,7 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_5input_box(PyObject *__pyx_self, Py
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "input_box") < 0)) __PYX_ERR(0, 32, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "input_box") < 0)) __PYX_ERR(0, 42, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -1600,15 +1865,15 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_5input_box(PyObject *__pyx_self, Py
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("input_box", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 32, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("input_box", 0, 2, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 42, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("pytinyfd.dialogs.input_box", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_title), (&PyString_Type), 1, "title", 1))) __PYX_ERR(0, 32, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_message), (&PyString_Type), 1, "message", 1))) __PYX_ERR(0, 32, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_input_type), (&PyString_Type), 1, "input_type", 1))) __PYX_ERR(0, 32, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_title), (&PyString_Type), 1, "title", 1))) __PYX_ERR(0, 42, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_message), (&PyString_Type), 1, "message", 1))) __PYX_ERR(0, 42, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_input_type), (&PyString_Type), 1, "input_type", 1))) __PYX_ERR(0, 42, __pyx_L1_error)
   __pyx_r = __pyx_pf_8pytinyfd_7dialogs_4input_box(__pyx_self, __pyx_v_title, __pyx_v_message, __pyx_v_input_type);
 
   /* function exit code */
@@ -1621,100 +1886,145 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_5input_box(PyObject *__pyx_self, Py
 }
 
 static PyObject *__pyx_pf_8pytinyfd_7dialogs_4input_box(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_title, PyObject *__pyx_v_message, PyObject *__pyx_v_input_type) {
-  wchar_t *__pyx_v_data;
+  char *__pyx_v_data;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  wchar_t const *__pyx_t_1;
-  wchar_t const *__pyx_t_2;
-  wchar_t const *__pyx_t_3;
-  int __pyx_t_4;
-  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_1 = NULL;
+  char const *__pyx_t_2;
+  char const *__pyx_t_3;
+  char const *__pyx_t_4;
+  int __pyx_t_5;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("input_box", 0);
+  __Pyx_INCREF(__pyx_v_title);
+  __Pyx_INCREF(__pyx_v_message);
+  __Pyx_INCREF(__pyx_v_input_type);
 
-  /* "pytinyfd/dialogs.pyx":33
+  /* "pytinyfd/dialogs.pyx":43
  * 
  * def input_box(title: str, message: str, input_type: str=INPUT_TEXT) -> Optional[str]:
- *     cdef wchar_t * data = tinyfd_inputBoxW(title, message, input_type)             # <<<<<<<<<<<<<<
+ *     title = title.encode()             # <<<<<<<<<<<<<<
+ *     message = message.encode()
+ *     input_type   = input_type.encode()
+ */
+  __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyString_Type_encode, __pyx_v_title); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 43, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 43, __pyx_L1_error)
+  __Pyx_DECREF_SET(__pyx_v_title, ((PyObject*)__pyx_t_1));
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":44
+ * def input_box(title: str, message: str, input_type: str=INPUT_TEXT) -> Optional[str]:
+ *     title = title.encode()
+ *     message = message.encode()             # <<<<<<<<<<<<<<
+ *     input_type   = input_type.encode()
+ *     cdef char * data = tinyfd_inputBox(title, message, input_type)
+ */
+  __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyString_Type_encode, __pyx_v_message); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 44, __pyx_L1_error)
+  __Pyx_DECREF_SET(__pyx_v_message, ((PyObject*)__pyx_t_1));
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":45
+ *     title = title.encode()
+ *     message = message.encode()
+ *     input_type   = input_type.encode()             # <<<<<<<<<<<<<<
+ *     cdef char * data = tinyfd_inputBox(title, message, input_type)
+ *     if data == NULL:
+ */
+  __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyString_Type_encode, __pyx_v_input_type); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 45, __pyx_L1_error)
+  __Pyx_DECREF_SET(__pyx_v_input_type, ((PyObject*)__pyx_t_1));
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":46
+ *     message = message.encode()
+ *     input_type   = input_type.encode()
+ *     cdef char * data = tinyfd_inputBox(title, message, input_type)             # <<<<<<<<<<<<<<
  *     if data == NULL:
  *         return None
  */
-  __pyx_t_1 = __Pyx_PyUnicode_AsUnicode(__pyx_v_title); if (unlikely((!__pyx_t_1) && PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyUnicode_AsUnicode(__pyx_v_message); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyUnicode_AsUnicode(__pyx_v_input_type); if (unlikely((!__pyx_t_3) && PyErr_Occurred())) __PYX_ERR(0, 33, __pyx_L1_error)
-  __pyx_v_data = tinyfd_inputBoxW(__pyx_t_1, __pyx_t_2, __pyx_t_3);
+  __pyx_t_2 = __Pyx_PyObject_AsString(__pyx_v_title); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_AsString(__pyx_v_message); if (unlikely((!__pyx_t_3) && PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_AsString(__pyx_v_input_type); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_v_data = tinyfd_inputBox(__pyx_t_2, __pyx_t_3, __pyx_t_4);
 
-  /* "pytinyfd/dialogs.pyx":34
- * def input_box(title: str, message: str, input_type: str=INPUT_TEXT) -> Optional[str]:
- *     cdef wchar_t * data = tinyfd_inputBoxW(title, message, input_type)
+  /* "pytinyfd/dialogs.pyx":47
+ *     input_type   = input_type.encode()
+ *     cdef char * data = tinyfd_inputBox(title, message, input_type)
  *     if data == NULL:             # <<<<<<<<<<<<<<
  *         return None
- *     return data
+ *     return data.decode()
  */
-  __pyx_t_4 = ((__pyx_v_data == NULL) != 0);
-  if (__pyx_t_4) {
+  __pyx_t_5 = ((__pyx_v_data == NULL) != 0);
+  if (__pyx_t_5) {
 
-    /* "pytinyfd/dialogs.pyx":35
- *     cdef wchar_t * data = tinyfd_inputBoxW(title, message, input_type)
+    /* "pytinyfd/dialogs.pyx":48
+ *     cdef char * data = tinyfd_inputBox(title, message, input_type)
  *     if data == NULL:
  *         return None             # <<<<<<<<<<<<<<
- *     return data
+ *     return data.decode()
  * 
  */
     __Pyx_XDECREF(__pyx_r);
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "pytinyfd/dialogs.pyx":34
- * def input_box(title: str, message: str, input_type: str=INPUT_TEXT) -> Optional[str]:
- *     cdef wchar_t * data = tinyfd_inputBoxW(title, message, input_type)
+    /* "pytinyfd/dialogs.pyx":47
+ *     input_type   = input_type.encode()
+ *     cdef char * data = tinyfd_inputBox(title, message, input_type)
  *     if data == NULL:             # <<<<<<<<<<<<<<
  *         return None
- *     return data
+ *     return data.decode()
  */
   }
 
-  /* "pytinyfd/dialogs.pyx":36
+  /* "pytinyfd/dialogs.pyx":49
  *     if data == NULL:
  *         return None
- *     return data             # <<<<<<<<<<<<<<
+ *     return data.decode()             # <<<<<<<<<<<<<<
  * 
- * def save_dialog(title: str, default_path_and_file: str, num_of_filter_patterns: int=0, filter_patterns: str="", filter_description: str="") -> Optional[str]:
+ * def save_dialog(title: str, default_path_and_file: str, filter_patterns: List[str]=[], filter_description: str="") -> Optional[str]:
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = __Pyx_PyUnicode_FromUnicode(__pyx_v_data); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 36, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_r = __pyx_t_5;
-  __pyx_t_5 = 0;
+  __pyx_t_1 = __Pyx_decode_c_string(__pyx_v_data, 0, strlen(__pyx_v_data), NULL, NULL, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "pytinyfd/dialogs.pyx":32
- *     return tinyfd_messageBoxW(title, message, dialog_type, icon_type, default_button)
+  /* "pytinyfd/dialogs.pyx":42
+ *     return tinyfd_messageBox(title, message, dialog_type, icon_type, default_button)
  * 
  * def input_box(title: str, message: str, input_type: str=INPUT_TEXT) -> Optional[str]:             # <<<<<<<<<<<<<<
- *     cdef wchar_t * data = tinyfd_inputBoxW(title, message, input_type)
- *     if data == NULL:
+ *     title = title.encode()
+ *     message = message.encode()
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_1);
   __Pyx_AddTraceback("pytinyfd.dialogs.input_box", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_title);
+  __Pyx_XDECREF(__pyx_v_message);
+  __Pyx_XDECREF(__pyx_v_input_type);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "pytinyfd/dialogs.pyx":38
- *     return data
+/* "pytinyfd/dialogs.pyx":51
+ *     return data.decode()
  * 
- * def save_dialog(title: str, default_path_and_file: str, num_of_filter_patterns: int=0, filter_patterns: str="", filter_description: str="") -> Optional[str]:             # <<<<<<<<<<<<<<
- *     cdef wchar_t * result = tinyfd_saveFileDialogW(title, default_path_and_file, num_of_filter_patterns, NULL, filter_description)
- *     return result if result != NULL else None
+ * def save_dialog(title: str, default_path_and_file: str, filter_patterns: List[str]=[], filter_description: str="") -> Optional[str]:             # <<<<<<<<<<<<<<
+ *     c_title = title.encode()
+ *     c_path = default_path_and_file.encode()
  */
 
 /* Python wrapper */
@@ -1723,8 +2033,7 @@ static PyMethodDef __pyx_mdef_8pytinyfd_7dialogs_7save_dialog = {"save_dialog", 
 static PyObject *__pyx_pw_8pytinyfd_7dialogs_7save_dialog(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_title = 0;
   PyObject *__pyx_v_default_path_and_file = 0;
-  PyObject *__pyx_v_num_of_filter_patterns = 0;
-  CYTHON_UNUSED PyObject *__pyx_v_filter_patterns = 0;
+  PyObject *__pyx_v_filter_patterns = 0;
   PyObject *__pyx_v_filter_description = 0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
@@ -1733,17 +2042,14 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_7save_dialog(PyObject *__pyx_self, 
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("save_dialog (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_title,&__pyx_n_s_default_path_and_file,&__pyx_n_s_num_of_filter_patterns,&__pyx_n_s_filter_patterns,&__pyx_n_s_filter_description,0};
-    PyObject* values[5] = {0,0,0,0,0};
-    values[2] = ((PyObject *)__pyx_int_0);
-    values[3] = ((PyObject*)__pyx_kp_s__6);
-    values[4] = ((PyObject*)__pyx_kp_s__6);
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_title,&__pyx_n_s_default_path_and_file,&__pyx_n_s_filter_patterns,&__pyx_n_s_filter_description,0};
+    PyObject* values[4] = {0,0,0,0};
+    values[2] = __pyx_k__6;
+    values[3] = ((PyObject*)__pyx_kp_s__7);
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
@@ -1764,34 +2070,26 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_7save_dialog(PyObject *__pyx_self, 
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_default_path_and_file)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("save_dialog", 0, 2, 5, 1); __PYX_ERR(0, 38, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("save_dialog", 0, 2, 4, 1); __PYX_ERR(0, 51, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_num_of_filter_patterns);
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_filter_patterns);
           if (value) { values[2] = value; kw_args--; }
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_filter_patterns);
-          if (value) { values[3] = value; kw_args--; }
-        }
-        CYTHON_FALLTHROUGH;
-        case  4:
-        if (kw_args > 0) {
           PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_filter_description);
-          if (value) { values[4] = value; kw_args--; }
+          if (value) { values[3] = value; kw_args--; }
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "save_dialog") < 0)) __PYX_ERR(0, 38, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "save_dialog") < 0)) __PYX_ERR(0, 51, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
         CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
@@ -1804,23 +2102,21 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_7save_dialog(PyObject *__pyx_self, 
     }
     __pyx_v_title = ((PyObject*)values[0]);
     __pyx_v_default_path_and_file = ((PyObject*)values[1]);
-    __pyx_v_num_of_filter_patterns = values[2];
-    __pyx_v_filter_patterns = ((PyObject*)values[3]);
-    __pyx_v_filter_description = ((PyObject*)values[4]);
+    __pyx_v_filter_patterns = values[2];
+    __pyx_v_filter_description = ((PyObject*)values[3]);
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("save_dialog", 0, 2, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 38, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("save_dialog", 0, 2, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 51, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("pytinyfd.dialogs.save_dialog", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_title), (&PyString_Type), 1, "title", 1))) __PYX_ERR(0, 38, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_default_path_and_file), (&PyString_Type), 1, "default_path_and_file", 1))) __PYX_ERR(0, 38, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_filter_patterns), (&PyString_Type), 1, "filter_patterns", 1))) __PYX_ERR(0, 38, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_filter_description), (&PyString_Type), 1, "filter_description", 1))) __PYX_ERR(0, 38, __pyx_L1_error)
-  __pyx_r = __pyx_pf_8pytinyfd_7dialogs_6save_dialog(__pyx_self, __pyx_v_title, __pyx_v_default_path_and_file, __pyx_v_num_of_filter_patterns, __pyx_v_filter_patterns, __pyx_v_filter_description);
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_title), (&PyString_Type), 1, "title", 1))) __PYX_ERR(0, 51, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_default_path_and_file), (&PyString_Type), 1, "default_path_and_file", 1))) __PYX_ERR(0, 51, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_filter_description), (&PyString_Type), 1, "filter_description", 1))) __PYX_ERR(0, 51, __pyx_L1_error)
+  __pyx_r = __pyx_pf_8pytinyfd_7dialogs_6save_dialog(__pyx_self, __pyx_v_title, __pyx_v_default_path_and_file, __pyx_v_filter_patterns, __pyx_v_filter_description);
 
   /* function exit code */
   goto __pyx_L0;
@@ -1831,67 +2127,297 @@ static PyObject *__pyx_pw_8pytinyfd_7dialogs_7save_dialog(PyObject *__pyx_self, 
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8pytinyfd_7dialogs_6save_dialog(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_title, PyObject *__pyx_v_default_path_and_file, PyObject *__pyx_v_num_of_filter_patterns, CYTHON_UNUSED PyObject *__pyx_v_filter_patterns, PyObject *__pyx_v_filter_description) {
-  wchar_t *__pyx_v_result;
+static PyObject *__pyx_pf_8pytinyfd_7dialogs_6save_dialog(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_title, PyObject *__pyx_v_default_path_and_file, PyObject *__pyx_v_filter_patterns, PyObject *__pyx_v_filter_description) {
+  PyObject *__pyx_v_c_title = NULL;
+  PyObject *__pyx_v_c_path = NULL;
+  PyObject *__pyx_v_c_description = NULL;
+  PyObject *__pyx_v_num_of_filter_patterns = NULL;
+  char **__pyx_v_c_filter_patterns;
+  PyObject *__pyx_v_i = NULL;
+  PyObject *__pyx_v_pattern = NULL;
+  char *__pyx_v_result;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
-  wchar_t const *__pyx_t_1;
-  wchar_t const *__pyx_t_2;
+  PyObject *__pyx_t_1 = NULL;
+  Py_ssize_t __pyx_t_2;
   int __pyx_t_3;
-  wchar_t __pyx_t_4;
-  PyObject *__pyx_t_5 = NULL;
-  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  size_t __pyx_t_5;
+  PyObject *(*__pyx_t_6)(PyObject *);
+  PyObject *__pyx_t_7 = NULL;
+  PyObject *__pyx_t_8 = NULL;
+  char *__pyx_t_9;
+  Py_ssize_t __pyx_t_10;
+  char const *__pyx_t_11;
+  char const *__pyx_t_12;
+  int __pyx_t_13;
+  char const *__pyx_t_14;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("save_dialog", 0);
 
-  /* "pytinyfd/dialogs.pyx":39
+  /* "pytinyfd/dialogs.pyx":52
  * 
- * def save_dialog(title: str, default_path_and_file: str, num_of_filter_patterns: int=0, filter_patterns: str="", filter_description: str="") -> Optional[str]:
- *     cdef wchar_t * result = tinyfd_saveFileDialogW(title, default_path_and_file, num_of_filter_patterns, NULL, filter_description)             # <<<<<<<<<<<<<<
+ * def save_dialog(title: str, default_path_and_file: str, filter_patterns: List[str]=[], filter_description: str="") -> Optional[str]:
+ *     c_title = title.encode()             # <<<<<<<<<<<<<<
+ *     c_path = default_path_and_file.encode()
+ *     c_description = filter_description.encode()
+ */
+  __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyString_Type_encode, __pyx_v_title); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 52, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_v_c_title = __pyx_t_1;
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":53
+ * def save_dialog(title: str, default_path_and_file: str, filter_patterns: List[str]=[], filter_description: str="") -> Optional[str]:
+ *     c_title = title.encode()
+ *     c_path = default_path_and_file.encode()             # <<<<<<<<<<<<<<
+ *     c_description = filter_description.encode()
+ *     num_of_filter_patterns = len(filter_patterns)
+ */
+  __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyString_Type_encode, __pyx_v_default_path_and_file); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_v_c_path = __pyx_t_1;
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":54
+ *     c_title = title.encode()
+ *     c_path = default_path_and_file.encode()
+ *     c_description = filter_description.encode()             # <<<<<<<<<<<<<<
+ *     num_of_filter_patterns = len(filter_patterns)
+ *     cdef char ** c_filter_patterns = NULL
+ */
+  __pyx_t_1 = __Pyx_CallUnboundCMethod0(&__pyx_umethod_PyString_Type_encode, __pyx_v_filter_description); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_v_c_description = __pyx_t_1;
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":55
+ *     c_path = default_path_and_file.encode()
+ *     c_description = filter_description.encode()
+ *     num_of_filter_patterns = len(filter_patterns)             # <<<<<<<<<<<<<<
+ *     cdef char ** c_filter_patterns = NULL
+ *     if num_of_filter_patterns > 0:
+ */
+  __pyx_t_2 = PyObject_Length(__pyx_v_filter_patterns); if (unlikely(__pyx_t_2 == ((Py_ssize_t)-1))) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_v_num_of_filter_patterns = __pyx_t_1;
+  __pyx_t_1 = 0;
+
+  /* "pytinyfd/dialogs.pyx":56
+ *     c_description = filter_description.encode()
+ *     num_of_filter_patterns = len(filter_patterns)
+ *     cdef char ** c_filter_patterns = NULL             # <<<<<<<<<<<<<<
+ *     if num_of_filter_patterns > 0:
+ *         c_filter_patterns = <char **>malloc(num_of_filter_patterns * sizeof(char*))
+ */
+  __pyx_v_c_filter_patterns = NULL;
+
+  /* "pytinyfd/dialogs.pyx":57
+ *     num_of_filter_patterns = len(filter_patterns)
+ *     cdef char ** c_filter_patterns = NULL
+ *     if num_of_filter_patterns > 0:             # <<<<<<<<<<<<<<
+ *         c_filter_patterns = <char **>malloc(num_of_filter_patterns * sizeof(char*))
+ *         for i in range(num_of_filter_patterns):
+ */
+  __pyx_t_1 = PyObject_RichCompare(__pyx_v_num_of_filter_patterns, __pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (__pyx_t_3) {
+
+    /* "pytinyfd/dialogs.pyx":58
+ *     cdef char ** c_filter_patterns = NULL
+ *     if num_of_filter_patterns > 0:
+ *         c_filter_patterns = <char **>malloc(num_of_filter_patterns * sizeof(char*))             # <<<<<<<<<<<<<<
+ *         for i in range(num_of_filter_patterns):
+ *             pattern = filter_patterns[i].encode()
+ */
+    __pyx_t_1 = __Pyx_PyInt_FromSize_t((sizeof(char *))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __pyx_t_4 = PyNumber_Multiply(__pyx_v_num_of_filter_patterns, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 58, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_5 = __Pyx_PyInt_As_size_t(__pyx_t_4); if (unlikely((__pyx_t_5 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 58, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_v_c_filter_patterns = ((char **)malloc(__pyx_t_5));
+
+    /* "pytinyfd/dialogs.pyx":59
+ *     if num_of_filter_patterns > 0:
+ *         c_filter_patterns = <char **>malloc(num_of_filter_patterns * sizeof(char*))
+ *         for i in range(num_of_filter_patterns):             # <<<<<<<<<<<<<<
+ *             pattern = filter_patterns[i].encode()
+ *             c_filter_patterns[i] = pattern
+ */
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_v_num_of_filter_patterns); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 59, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
+      __pyx_t_1 = __pyx_t_4; __Pyx_INCREF(__pyx_t_1); __pyx_t_2 = 0;
+      __pyx_t_6 = NULL;
+    } else {
+      __pyx_t_2 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_6 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 59, __pyx_L1_error)
+    }
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    for (;;) {
+      if (likely(!__pyx_t_6)) {
+        if (likely(PyList_CheckExact(__pyx_t_1))) {
+          if (__pyx_t_2 >= PyList_GET_SIZE(__pyx_t_1)) break;
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 59, __pyx_L1_error)
+          #else
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 59, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+          #endif
+        } else {
+          if (__pyx_t_2 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_2); __Pyx_INCREF(__pyx_t_4); __pyx_t_2++; if (unlikely(0 < 0)) __PYX_ERR(0, 59, __pyx_L1_error)
+          #else
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_2); __pyx_t_2++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 59, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+          #endif
+        }
+      } else {
+        __pyx_t_4 = __pyx_t_6(__pyx_t_1);
+        if (unlikely(!__pyx_t_4)) {
+          PyObject* exc_type = PyErr_Occurred();
+          if (exc_type) {
+            if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+            else __PYX_ERR(0, 59, __pyx_L1_error)
+          }
+          break;
+        }
+        __Pyx_GOTREF(__pyx_t_4);
+      }
+      __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_4);
+      __pyx_t_4 = 0;
+
+      /* "pytinyfd/dialogs.pyx":60
+ *         c_filter_patterns = <char **>malloc(num_of_filter_patterns * sizeof(char*))
+ *         for i in range(num_of_filter_patterns):
+ *             pattern = filter_patterns[i].encode()             # <<<<<<<<<<<<<<
+ *             c_filter_patterns[i] = pattern
+ *     cdef char * result = tinyfd_saveFileDialog(c_title, c_path, num_of_filter_patterns, c_filter_patterns, c_description)
+ */
+      __pyx_t_7 = __Pyx_PyObject_GetItem(__pyx_v_filter_patterns, __pyx_v_i); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 60, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_7);
+      __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_encode); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 60, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_8);
+      __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+      __pyx_t_7 = NULL;
+      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_8))) {
+        __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_8);
+        if (likely(__pyx_t_7)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
+          __Pyx_INCREF(__pyx_t_7);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_8, function);
+        }
+      }
+      __pyx_t_4 = (__pyx_t_7) ? __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_7) : __Pyx_PyObject_CallNoArg(__pyx_t_8);
+      __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 60, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+      __Pyx_XDECREF_SET(__pyx_v_pattern, __pyx_t_4);
+      __pyx_t_4 = 0;
+
+      /* "pytinyfd/dialogs.pyx":61
+ *         for i in range(num_of_filter_patterns):
+ *             pattern = filter_patterns[i].encode()
+ *             c_filter_patterns[i] = pattern             # <<<<<<<<<<<<<<
+ *     cdef char * result = tinyfd_saveFileDialog(c_title, c_path, num_of_filter_patterns, c_filter_patterns, c_description)
+ *     free(c_filter_patterns)
+ */
+      __pyx_t_9 = __Pyx_PyObject_AsWritableString(__pyx_v_pattern); if (unlikely((!__pyx_t_9) && PyErr_Occurred())) __PYX_ERR(0, 61, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyIndex_AsSsize_t(__pyx_v_i); if (unlikely((__pyx_t_10 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 61, __pyx_L1_error)
+      (__pyx_v_c_filter_patterns[__pyx_t_10]) = __pyx_t_9;
+
+      /* "pytinyfd/dialogs.pyx":59
+ *     if num_of_filter_patterns > 0:
+ *         c_filter_patterns = <char **>malloc(num_of_filter_patterns * sizeof(char*))
+ *         for i in range(num_of_filter_patterns):             # <<<<<<<<<<<<<<
+ *             pattern = filter_patterns[i].encode()
+ *             c_filter_patterns[i] = pattern
+ */
+    }
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+
+    /* "pytinyfd/dialogs.pyx":57
+ *     num_of_filter_patterns = len(filter_patterns)
+ *     cdef char ** c_filter_patterns = NULL
+ *     if num_of_filter_patterns > 0:             # <<<<<<<<<<<<<<
+ *         c_filter_patterns = <char **>malloc(num_of_filter_patterns * sizeof(char*))
+ *         for i in range(num_of_filter_patterns):
+ */
+  }
+
+  /* "pytinyfd/dialogs.pyx":62
+ *             pattern = filter_patterns[i].encode()
+ *             c_filter_patterns[i] = pattern
+ *     cdef char * result = tinyfd_saveFileDialog(c_title, c_path, num_of_filter_patterns, c_filter_patterns, c_description)             # <<<<<<<<<<<<<<
+ *     free(c_filter_patterns)
  *     return result if result != NULL else None
  */
-  __pyx_t_1 = __Pyx_PyUnicode_AsUnicode(__pyx_v_title); if (unlikely((!__pyx_t_1) && PyErr_Occurred())) __PYX_ERR(0, 39, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyUnicode_AsUnicode(__pyx_v_default_path_and_file); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(0, 39, __pyx_L1_error)
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_v_num_of_filter_patterns); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 39, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_AsPy_UNICODE(__pyx_v_filter_description); if (unlikely((__pyx_t_4 == ((wchar_t)-1)) && PyErr_Occurred())) __PYX_ERR(0, 39, __pyx_L1_error)
-  __pyx_v_result = tinyfd_saveFileDialogW(__pyx_t_1, __pyx_t_2, __pyx_t_3, NULL, __pyx_t_4);
+  __pyx_t_11 = __Pyx_PyObject_AsString(__pyx_v_c_title); if (unlikely((!__pyx_t_11) && PyErr_Occurred())) __PYX_ERR(0, 62, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyObject_AsString(__pyx_v_c_path); if (unlikely((!__pyx_t_12) && PyErr_Occurred())) __PYX_ERR(0, 62, __pyx_L1_error)
+  __pyx_t_13 = __Pyx_PyInt_As_int(__pyx_v_num_of_filter_patterns); if (unlikely((__pyx_t_13 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 62, __pyx_L1_error)
+  __pyx_t_14 = __Pyx_PyObject_AsString(__pyx_v_c_description); if (unlikely((!__pyx_t_14) && PyErr_Occurred())) __PYX_ERR(0, 62, __pyx_L1_error)
+  __pyx_v_result = tinyfd_saveFileDialog(__pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_v_c_filter_patterns, __pyx_t_14);
 
-  /* "pytinyfd/dialogs.pyx":40
- * def save_dialog(title: str, default_path_and_file: str, num_of_filter_patterns: int=0, filter_patterns: str="", filter_description: str="") -> Optional[str]:
- *     cdef wchar_t * result = tinyfd_saveFileDialogW(title, default_path_and_file, num_of_filter_patterns, NULL, filter_description)
+  /* "pytinyfd/dialogs.pyx":63
+ *             c_filter_patterns[i] = pattern
+ *     cdef char * result = tinyfd_saveFileDialog(c_title, c_path, num_of_filter_patterns, c_filter_patterns, c_description)
+ *     free(c_filter_patterns)             # <<<<<<<<<<<<<<
+ *     return result if result != NULL else None
+ */
+  free(__pyx_v_c_filter_patterns);
+
+  /* "pytinyfd/dialogs.pyx":64
+ *     cdef char * result = tinyfd_saveFileDialog(c_title, c_path, num_of_filter_patterns, c_filter_patterns, c_description)
+ *     free(c_filter_patterns)
  *     return result if result != NULL else None             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
   if (((__pyx_v_result != NULL) != 0)) {
-    __pyx_t_6 = __Pyx_PyUnicode_FromUnicode(__pyx_v_result); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 40, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_5 = __pyx_t_6;
-    __pyx_t_6 = 0;
+    __pyx_t_4 = __Pyx_PyBytes_FromString(__pyx_v_result); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 64, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_t_1 = __pyx_t_4;
+    __pyx_t_4 = 0;
   } else {
     __Pyx_INCREF(Py_None);
-    __pyx_t_5 = Py_None;
+    __pyx_t_1 = Py_None;
   }
-  __pyx_r = __pyx_t_5;
-  __pyx_t_5 = 0;
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "pytinyfd/dialogs.pyx":38
- *     return data
+  /* "pytinyfd/dialogs.pyx":51
+ *     return data.decode()
  * 
- * def save_dialog(title: str, default_path_and_file: str, num_of_filter_patterns: int=0, filter_patterns: str="", filter_description: str="") -> Optional[str]:             # <<<<<<<<<<<<<<
- *     cdef wchar_t * result = tinyfd_saveFileDialogW(title, default_path_and_file, num_of_filter_patterns, NULL, filter_description)
- *     return result if result != NULL else None
+ * def save_dialog(title: str, default_path_and_file: str, filter_patterns: List[str]=[], filter_description: str="") -> Optional[str]:             # <<<<<<<<<<<<<<
+ *     c_title = title.encode()
+ *     c_path = default_path_and_file.encode()
  */
 
   /* function exit code */
   __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_XDECREF(__pyx_t_8);
   __Pyx_AddTraceback("pytinyfd.dialogs.save_dialog", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
+  __Pyx_XDECREF(__pyx_v_c_title);
+  __Pyx_XDECREF(__pyx_v_c_path);
+  __Pyx_XDECREF(__pyx_v_c_description);
+  __Pyx_XDECREF(__pyx_v_num_of_filter_patterns);
+  __Pyx_XDECREF(__pyx_v_i);
+  __Pyx_XDECREF(__pyx_v_pattern);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -1954,17 +2480,24 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_ICON_WARNING, __pyx_k_ICON_WARNING, sizeof(__pyx_k_ICON_WARNING), 0, 0, 1, 1},
   {&__pyx_n_s_INPUT_PASSWORD, __pyx_k_INPUT_PASSWORD, sizeof(__pyx_k_INPUT_PASSWORD), 0, 0, 1, 1},
   {&__pyx_n_s_INPUT_TEXT, __pyx_k_INPUT_TEXT, sizeof(__pyx_k_INPUT_TEXT), 0, 0, 1, 1},
+  {&__pyx_n_s_List, __pyx_k_List, sizeof(__pyx_k_List), 0, 0, 1, 1},
   {&__pyx_n_s_Optional, __pyx_k_Optional, sizeof(__pyx_k_Optional), 0, 0, 1, 1},
-  {&__pyx_kp_s__6, __pyx_k__6, sizeof(__pyx_k__6), 0, 0, 1, 0},
+  {&__pyx_kp_s__7, __pyx_k__7, sizeof(__pyx_k__7), 0, 0, 1, 0},
+  {&__pyx_n_s_c_description, __pyx_k_c_description, sizeof(__pyx_k_c_description), 0, 0, 1, 1},
+  {&__pyx_n_s_c_filter_patterns, __pyx_k_c_filter_patterns, sizeof(__pyx_k_c_filter_patterns), 0, 0, 1, 1},
+  {&__pyx_n_s_c_path, __pyx_k_c_path, sizeof(__pyx_k_c_path), 0, 0, 1, 1},
+  {&__pyx_n_s_c_title, __pyx_k_c_title, sizeof(__pyx_k_c_title), 0, 0, 1, 1},
   {&__pyx_n_s_cancel, __pyx_k_cancel, sizeof(__pyx_k_cancel), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_data, __pyx_k_data, sizeof(__pyx_k_data), 0, 0, 1, 1},
   {&__pyx_n_s_default_button, __pyx_k_default_button, sizeof(__pyx_k_default_button), 0, 0, 1, 1},
   {&__pyx_n_s_default_path_and_file, __pyx_k_default_path_and_file, sizeof(__pyx_k_default_path_and_file), 0, 0, 1, 1},
   {&__pyx_n_s_dialog_type, __pyx_k_dialog_type, sizeof(__pyx_k_dialog_type), 0, 0, 1, 1},
+  {&__pyx_n_s_encode, __pyx_k_encode, sizeof(__pyx_k_encode), 0, 0, 1, 1},
   {&__pyx_n_s_error, __pyx_k_error, sizeof(__pyx_k_error), 0, 0, 1, 1},
   {&__pyx_n_s_filter_description, __pyx_k_filter_description, sizeof(__pyx_k_filter_description), 0, 0, 1, 1},
   {&__pyx_n_s_filter_patterns, __pyx_k_filter_patterns, sizeof(__pyx_k_filter_patterns), 0, 0, 1, 1},
+  {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_icon_type, __pyx_k_icon_type, sizeof(__pyx_k_icon_type), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_info, __pyx_k_info, sizeof(__pyx_k_info), 0, 0, 1, 1},
@@ -1977,9 +2510,11 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_notify_popup, __pyx_k_notify_popup, sizeof(__pyx_k_notify_popup), 0, 0, 1, 1},
   {&__pyx_n_s_num_of_filter_patterns, __pyx_k_num_of_filter_patterns, sizeof(__pyx_k_num_of_filter_patterns), 0, 0, 1, 1},
   {&__pyx_n_s_ok, __pyx_k_ok, sizeof(__pyx_k_ok), 0, 0, 1, 1},
+  {&__pyx_n_s_pattern, __pyx_k_pattern, sizeof(__pyx_k_pattern), 0, 0, 1, 1},
   {&__pyx_n_s_pytinyfd_dialogs, __pyx_k_pytinyfd_dialogs, sizeof(__pyx_k_pytinyfd_dialogs), 0, 0, 1, 1},
   {&__pyx_kp_s_pytinyfd_dialogs_pyx, __pyx_k_pytinyfd_dialogs_pyx, sizeof(__pyx_k_pytinyfd_dialogs_pyx), 0, 0, 1, 0},
   {&__pyx_n_s_question, __pyx_k_question, sizeof(__pyx_k_question), 0, 0, 1, 1},
+  {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_result, __pyx_k_result, sizeof(__pyx_k_result), 0, 0, 1, 1},
   {&__pyx_n_s_save_dialog, __pyx_k_save_dialog, sizeof(__pyx_k_save_dialog), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
@@ -1990,60 +2525,63 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 59, __pyx_L1_error)
   return 0;
+  __pyx_L1_error:;
+  return -1;
 }
 
 static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "pytinyfd/dialogs.pyx":25
+  /* "pytinyfd/dialogs.pyx":28
  * 
  * 
  * def  notify_popup(title: str, message: str, icon_type: str=ICON_INFO) -> int:             # <<<<<<<<<<<<<<
- *     return tinyfd_notifyPopupW(title, message, icon_type)
- * 
+ *     title = title.encode()
+ *     message = message.encode()
  */
-  __pyx_tuple__7 = PyTuple_Pack(3, __pyx_n_s_title, __pyx_n_s_message, __pyx_n_s_icon_type); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 25, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__7);
-  __Pyx_GIVEREF(__pyx_tuple__7);
-  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_pytinyfd_dialogs_pyx, __pyx_n_s_notify_popup, 25, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 25, __pyx_L1_error)
+  __pyx_tuple__8 = PyTuple_Pack(3, __pyx_n_s_title, __pyx_n_s_message, __pyx_n_s_icon_type); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__8);
+  __Pyx_GIVEREF(__pyx_tuple__8);
+  __pyx_codeobj__9 = (PyObject*)__Pyx_PyCode_New(3, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__8, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_pytinyfd_dialogs_pyx, __pyx_n_s_notify_popup, 28, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__9)) __PYX_ERR(0, 28, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":29
+  /* "pytinyfd/dialogs.pyx":35
  * 
  * 
  * def message_box(title: str, message: str, dialog_type: str=DIALOG_TYPE_OK, icon_type: str=ICON_INFO, default_button: int=BUTTON_OK) -> int:             # <<<<<<<<<<<<<<
- *     return tinyfd_messageBoxW(title, message, dialog_type, icon_type, default_button)
- * 
+ *     title = title.encode()
+ *     message = message.encode()
  */
-  __pyx_tuple__9 = PyTuple_Pack(5, __pyx_n_s_title, __pyx_n_s_message, __pyx_n_s_dialog_type, __pyx_n_s_icon_type, __pyx_n_s_default_button); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 29, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__9);
-  __Pyx_GIVEREF(__pyx_tuple__9);
-  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(5, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_pytinyfd_dialogs_pyx, __pyx_n_s_message_box, 29, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __pyx_tuple__10 = PyTuple_Pack(5, __pyx_n_s_title, __pyx_n_s_message, __pyx_n_s_dialog_type, __pyx_n_s_icon_type, __pyx_n_s_default_button); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__10);
+  __Pyx_GIVEREF(__pyx_tuple__10);
+  __pyx_codeobj__11 = (PyObject*)__Pyx_PyCode_New(5, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__10, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_pytinyfd_dialogs_pyx, __pyx_n_s_message_box, 35, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__11)) __PYX_ERR(0, 35, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":32
- *     return tinyfd_messageBoxW(title, message, dialog_type, icon_type, default_button)
+  /* "pytinyfd/dialogs.pyx":42
+ *     return tinyfd_messageBox(title, message, dialog_type, icon_type, default_button)
  * 
  * def input_box(title: str, message: str, input_type: str=INPUT_TEXT) -> Optional[str]:             # <<<<<<<<<<<<<<
- *     cdef wchar_t * data = tinyfd_inputBoxW(title, message, input_type)
- *     if data == NULL:
+ *     title = title.encode()
+ *     message = message.encode()
  */
-  __pyx_tuple__11 = PyTuple_Pack(4, __pyx_n_s_title, __pyx_n_s_message, __pyx_n_s_input_type, __pyx_n_s_data); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 32, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__11);
-  __Pyx_GIVEREF(__pyx_tuple__11);
-  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(3, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_pytinyfd_dialogs_pyx, __pyx_n_s_input_box, 32, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 32, __pyx_L1_error)
+  __pyx_tuple__12 = PyTuple_Pack(4, __pyx_n_s_title, __pyx_n_s_message, __pyx_n_s_input_type, __pyx_n_s_data); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
+  __pyx_codeobj__13 = (PyObject*)__Pyx_PyCode_New(3, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__12, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_pytinyfd_dialogs_pyx, __pyx_n_s_input_box, 42, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__13)) __PYX_ERR(0, 42, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":38
- *     return data
+  /* "pytinyfd/dialogs.pyx":51
+ *     return data.decode()
  * 
- * def save_dialog(title: str, default_path_and_file: str, num_of_filter_patterns: int=0, filter_patterns: str="", filter_description: str="") -> Optional[str]:             # <<<<<<<<<<<<<<
- *     cdef wchar_t * result = tinyfd_saveFileDialogW(title, default_path_and_file, num_of_filter_patterns, NULL, filter_description)
- *     return result if result != NULL else None
+ * def save_dialog(title: str, default_path_and_file: str, filter_patterns: List[str]=[], filter_description: str="") -> Optional[str]:             # <<<<<<<<<<<<<<
+ *     c_title = title.encode()
+ *     c_path = default_path_and_file.encode()
  */
-  __pyx_tuple__13 = PyTuple_Pack(6, __pyx_n_s_title, __pyx_n_s_default_path_and_file, __pyx_n_s_num_of_filter_patterns, __pyx_n_s_filter_patterns, __pyx_n_s_filter_description, __pyx_n_s_result); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 38, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__13);
-  __Pyx_GIVEREF(__pyx_tuple__13);
-  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(5, 0, 6, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_pytinyfd_dialogs_pyx, __pyx_n_s_save_dialog, 38, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_tuple__14 = PyTuple_Pack(12, __pyx_n_s_title, __pyx_n_s_default_path_and_file, __pyx_n_s_filter_patterns, __pyx_n_s_filter_description, __pyx_n_s_c_title, __pyx_n_s_c_path, __pyx_n_s_c_description, __pyx_n_s_num_of_filter_patterns, __pyx_n_s_c_filter_patterns, __pyx_n_s_i, __pyx_n_s_pattern, __pyx_n_s_result); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__14);
+  __Pyx_GIVEREF(__pyx_tuple__14);
+  __pyx_codeobj__15 = (PyObject*)__Pyx_PyCode_New(4, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__14, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_pytinyfd_dialogs_pyx, __pyx_n_s_save_dialog, 51, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__15)) __PYX_ERR(0, 51, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -2052,6 +2590,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
 }
 
 static CYTHON_SMALL_CODE int __Pyx_InitGlobals(void) {
+  __pyx_umethod_PyString_Type_encode.type = (PyObject*)&PyString_Type;
   if (__Pyx_InitStrings(__pyx_string_tab) < 0) __PYX_ERR(0, 1, __pyx_L1_error);
   __pyx_int_0 = PyInt_FromLong(0); if (unlikely(!__pyx_int_0)) __PYX_ERR(0, 1, __pyx_L1_error)
   __pyx_int_1 = PyInt_FromLong(1); if (unlikely(!__pyx_int_1)) __PYX_ERR(0, 1, __pyx_L1_error)
@@ -2328,209 +2867,234 @@ if (!__Pyx_RefNanny) {
   #endif
 
   /* "pytinyfd/dialogs.pyx":1
+ * from typing import List             # <<<<<<<<<<<<<<
+ * from typing import Optional
+ * 
+ */
+  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_INCREF(__pyx_n_s_List);
+  __Pyx_GIVEREF(__pyx_n_s_List);
+  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_List);
+  __pyx_t_2 = __Pyx_Import(__pyx_n_s_typing, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_List); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_List, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "pytinyfd/dialogs.pyx":2
+ * from typing import List
  * from typing import Optional             # <<<<<<<<<<<<<<
  * 
  * from dialogs cimport *
  */
-  __pyx_t_1 = PyList_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_n_s_Optional);
   __Pyx_GIVEREF(__pyx_n_s_Optional);
-  PyList_SET_ITEM(__pyx_t_1, 0, __pyx_n_s_Optional);
-  __pyx_t_2 = __Pyx_Import(__pyx_n_s_typing, __pyx_t_1, -1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_ImportFrom(__pyx_t_2, __pyx_n_s_Optional); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  PyList_SET_ITEM(__pyx_t_2, 0, __pyx_n_s_Optional);
+  __pyx_t_1 = __Pyx_Import(__pyx_n_s_typing, __pyx_t_2, -1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_Optional, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_ImportFrom(__pyx_t_1, __pyx_n_s_Optional); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_Optional, __pyx_t_2) < 0) __PYX_ERR(0, 2, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "pytinyfd/dialogs.pyx":6
+  /* "pytinyfd/dialogs.pyx":9
  * 
  * # Icon types
  * ICON_ERROR =    "error"             # <<<<<<<<<<<<<<
  * ICON_INFO = "info"
  * ICON_QUESTION = "question"
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ICON_ERROR, __pyx_n_s_error) < 0) __PYX_ERR(0, 6, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ICON_ERROR, __pyx_n_s_error) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":7
+  /* "pytinyfd/dialogs.pyx":10
  * # Icon types
  * ICON_ERROR =    "error"
  * ICON_INFO = "info"             # <<<<<<<<<<<<<<
  * ICON_QUESTION = "question"
  * ICON_WARNING = "warning"
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ICON_INFO, __pyx_n_s_info) < 0) __PYX_ERR(0, 7, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ICON_INFO, __pyx_n_s_info) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":8
+  /* "pytinyfd/dialogs.pyx":11
  * ICON_ERROR =    "error"
  * ICON_INFO = "info"
  * ICON_QUESTION = "question"             # <<<<<<<<<<<<<<
  * ICON_WARNING = "warning"
  * 
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ICON_QUESTION, __pyx_n_s_question) < 0) __PYX_ERR(0, 8, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ICON_QUESTION, __pyx_n_s_question) < 0) __PYX_ERR(0, 11, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":9
+  /* "pytinyfd/dialogs.pyx":12
  * ICON_INFO = "info"
  * ICON_QUESTION = "question"
  * ICON_WARNING = "warning"             # <<<<<<<<<<<<<<
  * 
  * # Dialog types
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ICON_WARNING, __pyx_n_s_warning) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_ICON_WARNING, __pyx_n_s_warning) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":12
+  /* "pytinyfd/dialogs.pyx":15
  * 
  * # Dialog types
  * DIALOG_TYPE_OK = "ok"             # <<<<<<<<<<<<<<
  * DIALOG_TYPE_CANCEL = "cancel"
  * DIALOG_TYPE_YESNO = "yesno"
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_DIALOG_TYPE_OK, __pyx_n_s_ok) < 0) __PYX_ERR(0, 12, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_DIALOG_TYPE_OK, __pyx_n_s_ok) < 0) __PYX_ERR(0, 15, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":13
+  /* "pytinyfd/dialogs.pyx":16
  * # Dialog types
  * DIALOG_TYPE_OK = "ok"
  * DIALOG_TYPE_CANCEL = "cancel"             # <<<<<<<<<<<<<<
  * DIALOG_TYPE_YESNO = "yesno"
  * 
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_DIALOG_TYPE_CANCEL, __pyx_n_s_cancel) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_DIALOG_TYPE_CANCEL, __pyx_n_s_cancel) < 0) __PYX_ERR(0, 16, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":14
+  /* "pytinyfd/dialogs.pyx":17
  * DIALOG_TYPE_OK = "ok"
  * DIALOG_TYPE_CANCEL = "cancel"
  * DIALOG_TYPE_YESNO = "yesno"             # <<<<<<<<<<<<<<
  * 
  * # Button types
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_DIALOG_TYPE_YESNO, __pyx_n_s_yesno) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_DIALOG_TYPE_YESNO, __pyx_n_s_yesno) < 0) __PYX_ERR(0, 17, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":17
+  /* "pytinyfd/dialogs.pyx":20
  * 
  * # Button types
  * BUTTON_CANCEL = 0             # <<<<<<<<<<<<<<
  * BUTTON_OK = 1
  * 
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_BUTTON_CANCEL, __pyx_int_0) < 0) __PYX_ERR(0, 17, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_BUTTON_CANCEL, __pyx_int_0) < 0) __PYX_ERR(0, 20, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":18
+  /* "pytinyfd/dialogs.pyx":21
  * # Button types
  * BUTTON_CANCEL = 0
  * BUTTON_OK = 1             # <<<<<<<<<<<<<<
  * 
  * # Input types
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_BUTTON_OK, __pyx_int_1) < 0) __PYX_ERR(0, 18, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_BUTTON_OK, __pyx_int_1) < 0) __PYX_ERR(0, 21, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":21
+  /* "pytinyfd/dialogs.pyx":24
  * 
  * # Input types
  * INPUT_PASSWORD  = None             # <<<<<<<<<<<<<<
  * INPUT_TEXT = ""
  * 
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_INPUT_PASSWORD, Py_None) < 0) __PYX_ERR(0, 21, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_INPUT_PASSWORD, Py_None) < 0) __PYX_ERR(0, 24, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":22
+  /* "pytinyfd/dialogs.pyx":25
  * # Input types
  * INPUT_PASSWORD  = None
  * INPUT_TEXT = ""             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_INPUT_TEXT, __pyx_kp_s__6) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_INPUT_TEXT, __pyx_kp_s__7) < 0) __PYX_ERR(0, 25, __pyx_L1_error)
 
-  /* "pytinyfd/dialogs.pyx":25
+  /* "pytinyfd/dialogs.pyx":28
  * 
  * 
  * def  notify_popup(title: str, message: str, icon_type: str=ICON_INFO) -> int:             # <<<<<<<<<<<<<<
- *     return tinyfd_notifyPopupW(title, message, icon_type)
- * 
+ *     title = title.encode()
+ *     message = message.encode()
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ICON_INFO); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (!(likely(PyString_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 25, __pyx_L1_error)
-  __pyx_k_ = ((PyObject*)__pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8pytinyfd_7dialogs_1notify_popup, NULL, __pyx_n_s_pytinyfd_dialogs); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 25, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_notify_popup, __pyx_t_2) < 0) __PYX_ERR(0, 25, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_ICON_INFO); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 28, __pyx_L1_error)
+  __pyx_k_ = ((PyObject*)__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8pytinyfd_7dialogs_1notify_popup, NULL, __pyx_n_s_pytinyfd_dialogs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_notify_popup, __pyx_t_1) < 0) __PYX_ERR(0, 28, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "pytinyfd/dialogs.pyx":29
+  /* "pytinyfd/dialogs.pyx":35
  * 
  * 
  * def message_box(title: str, message: str, dialog_type: str=DIALOG_TYPE_OK, icon_type: str=ICON_INFO, default_button: int=BUTTON_OK) -> int:             # <<<<<<<<<<<<<<
- *     return tinyfd_messageBoxW(title, message, dialog_type, icon_type, default_button)
- * 
+ *     title = title.encode()
+ *     message = message.encode()
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_DIALOG_TYPE_OK); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (!(likely(PyString_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 29, __pyx_L1_error)
-  __pyx_k__2 = ((PyObject*)__pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_ICON_INFO); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (!(likely(PyString_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 29, __pyx_L1_error)
-  __pyx_k__3 = ((PyObject*)__pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_BUTTON_OK); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_k__4 = __pyx_t_2;
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8pytinyfd_7dialogs_3message_box, NULL, __pyx_n_s_pytinyfd_dialogs); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_message_box, __pyx_t_2) < 0) __PYX_ERR(0, 29, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_DIALOG_TYPE_OK); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 35, __pyx_L1_error)
+  __pyx_k__2 = ((PyObject*)__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_ICON_INFO); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 35, __pyx_L1_error)
+  __pyx_k__3 = ((PyObject*)__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_BUTTON_OK); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_k__4 = __pyx_t_1;
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8pytinyfd_7dialogs_3message_box, NULL, __pyx_n_s_pytinyfd_dialogs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_message_box, __pyx_t_1) < 0) __PYX_ERR(0, 35, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "pytinyfd/dialogs.pyx":32
- *     return tinyfd_messageBoxW(title, message, dialog_type, icon_type, default_button)
+  /* "pytinyfd/dialogs.pyx":42
+ *     return tinyfd_messageBox(title, message, dialog_type, icon_type, default_button)
  * 
  * def input_box(title: str, message: str, input_type: str=INPUT_TEXT) -> Optional[str]:             # <<<<<<<<<<<<<<
- *     cdef wchar_t * data = tinyfd_inputBoxW(title, message, input_type)
- *     if data == NULL:
+ *     title = title.encode()
+ *     message = message.encode()
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_INPUT_TEXT); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 32, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (!(likely(PyString_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 32, __pyx_L1_error)
-  __pyx_k__5 = ((PyObject*)__pyx_t_2);
-  __Pyx_GIVEREF(__pyx_t_2);
-  __pyx_t_2 = 0;
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8pytinyfd_7dialogs_5input_box, NULL, __pyx_n_s_pytinyfd_dialogs); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 32, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_input_box, __pyx_t_2) < 0) __PYX_ERR(0, 32, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_INPUT_TEXT); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (!(likely(PyString_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "str", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 42, __pyx_L1_error)
+  __pyx_k__5 = ((PyObject*)__pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8pytinyfd_7dialogs_5input_box, NULL, __pyx_n_s_pytinyfd_dialogs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_input_box, __pyx_t_1) < 0) __PYX_ERR(0, 42, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "pytinyfd/dialogs.pyx":38
- *     return data
+  /* "pytinyfd/dialogs.pyx":51
+ *     return data.decode()
  * 
- * def save_dialog(title: str, default_path_and_file: str, num_of_filter_patterns: int=0, filter_patterns: str="", filter_description: str="") -> Optional[str]:             # <<<<<<<<<<<<<<
- *     cdef wchar_t * result = tinyfd_saveFileDialogW(title, default_path_and_file, num_of_filter_patterns, NULL, filter_description)
- *     return result if result != NULL else None
+ * def save_dialog(title: str, default_path_and_file: str, filter_patterns: List[str]=[], filter_description: str="") -> Optional[str]:             # <<<<<<<<<<<<<<
+ *     c_title = title.encode()
+ *     c_path = default_path_and_file.encode()
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8pytinyfd_7dialogs_7save_dialog, NULL, __pyx_n_s_pytinyfd_dialogs); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_save_dialog, __pyx_t_2) < 0) __PYX_ERR(0, 38, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_k__6 = __pyx_t_1;
+  __Pyx_GIVEREF(__pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8pytinyfd_7dialogs_7save_dialog, NULL, __pyx_n_s_pytinyfd_dialogs); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_save_dialog, __pyx_t_1) < 0) __PYX_ERR(0, 51, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "pytinyfd/dialogs.pyx":1
- * from typing import Optional             # <<<<<<<<<<<<<<
+ * from typing import List             # <<<<<<<<<<<<<<
+ * from typing import Optional
  * 
- * from dialogs cimport *
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /*--- Wrapped vars code ---*/
 
@@ -2574,6 +3138,34 @@ end:
     return (__Pyx_RefNannyAPIStruct *)r;
 }
 #endif
+
+/* PyObjectGetAttrStr */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
+    PyTypeObject* tp = Py_TYPE(obj);
+    if (likely(tp->tp_getattro))
+        return tp->tp_getattro(obj, attr_name);
+#if PY_MAJOR_VERSION < 3
+    if (likely(tp->tp_getattr))
+        return tp->tp_getattr(obj, PyString_AS_STRING(attr_name));
+#endif
+    return PyObject_GetAttr(obj, attr_name);
+}
+#endif
+
+/* GetBuiltinName */
+static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
+    PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
+    if (unlikely(!result)) {
+        PyErr_Format(PyExc_NameError,
+#if PY_MAJOR_VERSION >= 3
+            "name '%U' is not defined", name);
+#else
+            "name '%.200s' is not defined", PyString_AS_STRING(name));
+#endif
+    }
+    return result;
+}
 
 /* RaiseArgTupleInvalid */
 static void __Pyx_RaiseArgtupleInvalid(
@@ -2738,17 +3330,435 @@ static int __Pyx__ArgTypeTest(PyObject *obj, PyTypeObject *type, const char *nam
     return 0;
 }
 
-/* PyObjectGetAttrStr */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PyObject* __Pyx_PyObject_GetAttrStr(PyObject* obj, PyObject* attr_name) {
-    PyTypeObject* tp = Py_TYPE(obj);
-    if (likely(tp->tp_getattro))
-        return tp->tp_getattro(obj, attr_name);
-#if PY_MAJOR_VERSION < 3
-    if (likely(tp->tp_getattr))
-        return tp->tp_getattr(obj, PyString_AS_STRING(attr_name));
+/* PyObjectCall */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_Call(PyObject *func, PyObject *arg, PyObject *kw) {
+    PyObject *result;
+    ternaryfunc call = func->ob_type->tp_call;
+    if (unlikely(!call))
+        return PyObject_Call(func, arg, kw);
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
+        return NULL;
+    result = (*call)(func, arg, kw);
+    Py_LeaveRecursiveCall();
+    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
+        PyErr_SetString(
+            PyExc_SystemError,
+            "NULL result without error in PyObject_Call");
+    }
+    return result;
+}
 #endif
-    return PyObject_GetAttr(obj, attr_name);
+
+/* UnpackUnboundCMethod */
+static int __Pyx_TryUnpackUnboundCMethod(__Pyx_CachedCFunction* target) {
+    PyObject *method;
+    method = __Pyx_PyObject_GetAttrStr(target->type, *target->method_name);
+    if (unlikely(!method))
+        return -1;
+    target->method = method;
+#if CYTHON_COMPILING_IN_CPYTHON
+    #if PY_MAJOR_VERSION >= 3
+    if (likely(__Pyx_TypeCheck(method, &PyMethodDescr_Type)))
+    #endif
+    {
+        PyMethodDescrObject *descr = (PyMethodDescrObject*) method;
+        target->func = descr->d_method->ml_meth;
+        target->flag = descr->d_method->ml_flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_STACKLESS);
+    }
+#endif
+    return 0;
+}
+
+/* CallUnboundCMethod0 */
+static PyObject* __Pyx__CallUnboundCMethod0(__Pyx_CachedCFunction* cfunc, PyObject* self) {
+    PyObject *args, *result = NULL;
+    if (unlikely(!cfunc->method) && unlikely(__Pyx_TryUnpackUnboundCMethod(cfunc) < 0)) return NULL;
+#if CYTHON_ASSUME_SAFE_MACROS
+    args = PyTuple_New(1);
+    if (unlikely(!args)) goto bad;
+    Py_INCREF(self);
+    PyTuple_SET_ITEM(args, 0, self);
+#else
+    args = PyTuple_Pack(1, self);
+    if (unlikely(!args)) goto bad;
+#endif
+    result = __Pyx_PyObject_Call(cfunc->method, args, NULL);
+    Py_DECREF(args);
+bad:
+    return result;
+}
+
+/* decode_c_string */
+static CYTHON_INLINE PyObject* __Pyx_decode_c_string(
+         const char* cstring, Py_ssize_t start, Py_ssize_t stop,
+         const char* encoding, const char* errors,
+         PyObject* (*decode_func)(const char *s, Py_ssize_t size, const char *errors)) {
+    Py_ssize_t length;
+    if (unlikely((start < 0) | (stop < 0))) {
+        size_t slen = strlen(cstring);
+        if (unlikely(slen > (size_t) PY_SSIZE_T_MAX)) {
+            PyErr_SetString(PyExc_OverflowError,
+                            "c-string too long to convert to Python");
+            return NULL;
+        }
+        length = (Py_ssize_t) slen;
+        if (start < 0) {
+            start += length;
+            if (start < 0)
+                start = 0;
+        }
+        if (stop < 0)
+            stop += length;
+    }
+    if (unlikely(stop <= start))
+        return __Pyx_NewRef(__pyx_empty_unicode);
+    length = stop - start;
+    cstring += start;
+    if (decode_func) {
+        return decode_func(cstring, length, errors);
+    } else {
+        return PyUnicode_Decode(cstring, length, encoding, errors);
+    }
+}
+
+/* PyCFunctionFastCall */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
+    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
+    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
+    PyObject *self = PyCFunction_GET_SELF(func);
+    int flags = PyCFunction_GET_FLAGS(func);
+    assert(PyCFunction_Check(func));
+    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS)));
+    assert(nargs >= 0);
+    assert(nargs == 0 || args != NULL);
+    /* _PyCFunction_FastCallDict() must not be called with an exception set,
+       because it may clear it (directly or indirectly) and so the
+       caller loses its exception */
+    assert(!PyErr_Occurred());
+    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
+        return (*((__Pyx_PyCFunctionFastWithKeywords)(void*)meth)) (self, args, nargs, NULL);
+    } else {
+        return (*((__Pyx_PyCFunctionFast)(void*)meth)) (self, args, nargs);
+    }
+}
+#endif
+
+/* PyFunctionFastCall */
+#if CYTHON_FAST_PYCALL
+static PyObject* __Pyx_PyFunction_FastCallNoKw(PyCodeObject *co, PyObject **args, Py_ssize_t na,
+                                               PyObject *globals) {
+    PyFrameObject *f;
+    PyThreadState *tstate = __Pyx_PyThreadState_Current;
+    PyObject **fastlocals;
+    Py_ssize_t i;
+    PyObject *result;
+    assert(globals != NULL);
+    /* XXX Perhaps we should create a specialized
+       PyFrame_New() that doesn't take locals, but does
+       take builtins without sanity checking them.
+       */
+    assert(tstate != NULL);
+    f = PyFrame_New(tstate, co, globals, NULL);
+    if (f == NULL) {
+        return NULL;
+    }
+    fastlocals = __Pyx_PyFrame_GetLocalsplus(f);
+    for (i = 0; i < na; i++) {
+        Py_INCREF(*args);
+        fastlocals[i] = *args++;
+    }
+    result = PyEval_EvalFrameEx(f,0);
+    ++tstate->recursion_depth;
+    Py_DECREF(f);
+    --tstate->recursion_depth;
+    return result;
+}
+#if 1 || PY_VERSION_HEX < 0x030600B1
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs) {
+    PyCodeObject *co = (PyCodeObject *)PyFunction_GET_CODE(func);
+    PyObject *globals = PyFunction_GET_GLOBALS(func);
+    PyObject *argdefs = PyFunction_GET_DEFAULTS(func);
+    PyObject *closure;
+#if PY_MAJOR_VERSION >= 3
+    PyObject *kwdefs;
+#endif
+    PyObject *kwtuple, **k;
+    PyObject **d;
+    Py_ssize_t nd;
+    Py_ssize_t nk;
+    PyObject *result;
+    assert(kwargs == NULL || PyDict_Check(kwargs));
+    nk = kwargs ? PyDict_Size(kwargs) : 0;
+    if (Py_EnterRecursiveCall((char*)" while calling a Python object")) {
+        return NULL;
+    }
+    if (
+#if PY_MAJOR_VERSION >= 3
+            co->co_kwonlyargcount == 0 &&
+#endif
+            likely(kwargs == NULL || nk == 0) &&
+            co->co_flags == (CO_OPTIMIZED | CO_NEWLOCALS | CO_NOFREE)) {
+        if (argdefs == NULL && co->co_argcount == nargs) {
+            result = __Pyx_PyFunction_FastCallNoKw(co, args, nargs, globals);
+            goto done;
+        }
+        else if (nargs == 0 && argdefs != NULL
+                 && co->co_argcount == Py_SIZE(argdefs)) {
+            /* function called with no arguments, but all parameters have
+               a default value: use default values as arguments .*/
+            args = &PyTuple_GET_ITEM(argdefs, 0);
+            result =__Pyx_PyFunction_FastCallNoKw(co, args, Py_SIZE(argdefs), globals);
+            goto done;
+        }
+    }
+    if (kwargs != NULL) {
+        Py_ssize_t pos, i;
+        kwtuple = PyTuple_New(2 * nk);
+        if (kwtuple == NULL) {
+            result = NULL;
+            goto done;
+        }
+        k = &PyTuple_GET_ITEM(kwtuple, 0);
+        pos = i = 0;
+        while (PyDict_Next(kwargs, &pos, &k[i], &k[i+1])) {
+            Py_INCREF(k[i]);
+            Py_INCREF(k[i+1]);
+            i += 2;
+        }
+        nk = i / 2;
+    }
+    else {
+        kwtuple = NULL;
+        k = NULL;
+    }
+    closure = PyFunction_GET_CLOSURE(func);
+#if PY_MAJOR_VERSION >= 3
+    kwdefs = PyFunction_GET_KW_DEFAULTS(func);
+#endif
+    if (argdefs != NULL) {
+        d = &PyTuple_GET_ITEM(argdefs, 0);
+        nd = Py_SIZE(argdefs);
+    }
+    else {
+        d = NULL;
+        nd = 0;
+    }
+#if PY_MAJOR_VERSION >= 3
+    result = PyEval_EvalCodeEx((PyObject*)co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, kwdefs, closure);
+#else
+    result = PyEval_EvalCodeEx(co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, closure);
+#endif
+    Py_XDECREF(kwtuple);
+done:
+    Py_LeaveRecursiveCall();
+    return result;
+}
+#endif
+#endif
+
+/* PyObjectCallMethO */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg) {
+    PyObject *self, *result;
+    PyCFunction cfunc;
+    cfunc = PyCFunction_GET_FUNCTION(func);
+    self = PyCFunction_GET_SELF(func);
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
+        return NULL;
+    result = cfunc(self, arg);
+    Py_LeaveRecursiveCall();
+    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
+        PyErr_SetString(
+            PyExc_SystemError,
+            "NULL result without error in PyObject_Call");
+    }
+    return result;
+}
+#endif
+
+/* PyObjectCallOneArg */
+#if CYTHON_COMPILING_IN_CPYTHON
+static PyObject* __Pyx__PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *result;
+    PyObject *args = PyTuple_New(1);
+    if (unlikely(!args)) return NULL;
+    Py_INCREF(arg);
+    PyTuple_SET_ITEM(args, 0, arg);
+    result = __Pyx_PyObject_Call(func, args, NULL);
+    Py_DECREF(args);
+    return result;
+}
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+#if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(func)) {
+        return __Pyx_PyFunction_FastCall(func, &arg, 1);
+    }
+#endif
+    if (likely(PyCFunction_Check(func))) {
+        if (likely(PyCFunction_GET_FLAGS(func) & METH_O)) {
+            return __Pyx_PyObject_CallMethO(func, arg);
+#if CYTHON_FAST_PYCCALL
+        } else if (PyCFunction_GET_FLAGS(func) & METH_FASTCALL) {
+            return __Pyx_PyCFunction_FastCall(func, &arg, 1);
+#endif
+        }
+    }
+    return __Pyx__PyObject_CallOneArg(func, arg);
+}
+#else
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *result;
+    PyObject *args = PyTuple_Pack(1, arg);
+    if (unlikely(!args)) return NULL;
+    result = __Pyx_PyObject_Call(func, args, NULL);
+    Py_DECREF(args);
+    return result;
+}
+#endif
+
+/* GetItemInt */
+static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j) {
+    PyObject *r;
+    if (!j) return NULL;
+    r = PyObject_GetItem(o, j);
+    Py_DECREF(j);
+    return r;
+}
+static CYTHON_INLINE PyObject *__Pyx_GetItemInt_List_Fast(PyObject *o, Py_ssize_t i,
+                                                              CYTHON_NCP_UNUSED int wraparound,
+                                                              CYTHON_NCP_UNUSED int boundscheck) {
+#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+    Py_ssize_t wrapped_i = i;
+    if (wraparound & unlikely(i < 0)) {
+        wrapped_i += PyList_GET_SIZE(o);
+    }
+    if ((!boundscheck) || likely(__Pyx_is_valid_index(wrapped_i, PyList_GET_SIZE(o)))) {
+        PyObject *r = PyList_GET_ITEM(o, wrapped_i);
+        Py_INCREF(r);
+        return r;
+    }
+    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
+#else
+    return PySequence_GetItem(o, i);
+#endif
+}
+static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Tuple_Fast(PyObject *o, Py_ssize_t i,
+                                                              CYTHON_NCP_UNUSED int wraparound,
+                                                              CYTHON_NCP_UNUSED int boundscheck) {
+#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+    Py_ssize_t wrapped_i = i;
+    if (wraparound & unlikely(i < 0)) {
+        wrapped_i += PyTuple_GET_SIZE(o);
+    }
+    if ((!boundscheck) || likely(__Pyx_is_valid_index(wrapped_i, PyTuple_GET_SIZE(o)))) {
+        PyObject *r = PyTuple_GET_ITEM(o, wrapped_i);
+        Py_INCREF(r);
+        return r;
+    }
+    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
+#else
+    return PySequence_GetItem(o, i);
+#endif
+}
+static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i, int is_list,
+                                                     CYTHON_NCP_UNUSED int wraparound,
+                                                     CYTHON_NCP_UNUSED int boundscheck) {
+#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS && CYTHON_USE_TYPE_SLOTS
+    if (is_list || PyList_CheckExact(o)) {
+        Py_ssize_t n = ((!wraparound) | likely(i >= 0)) ? i : i + PyList_GET_SIZE(o);
+        if ((!boundscheck) || (likely(__Pyx_is_valid_index(n, PyList_GET_SIZE(o))))) {
+            PyObject *r = PyList_GET_ITEM(o, n);
+            Py_INCREF(r);
+            return r;
+        }
+    }
+    else if (PyTuple_CheckExact(o)) {
+        Py_ssize_t n = ((!wraparound) | likely(i >= 0)) ? i : i + PyTuple_GET_SIZE(o);
+        if ((!boundscheck) || likely(__Pyx_is_valid_index(n, PyTuple_GET_SIZE(o)))) {
+            PyObject *r = PyTuple_GET_ITEM(o, n);
+            Py_INCREF(r);
+            return r;
+        }
+    } else {
+        PySequenceMethods *m = Py_TYPE(o)->tp_as_sequence;
+        if (likely(m && m->sq_item)) {
+            if (wraparound && unlikely(i < 0) && likely(m->sq_length)) {
+                Py_ssize_t l = m->sq_length(o);
+                if (likely(l >= 0)) {
+                    i += l;
+                } else {
+                    if (!PyErr_ExceptionMatches(PyExc_OverflowError))
+                        return NULL;
+                    PyErr_Clear();
+                }
+            }
+            return m->sq_item(o, i);
+        }
+    }
+#else
+    if (is_list || PySequence_Check(o)) {
+        return PySequence_GetItem(o, i);
+    }
+#endif
+    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
+}
+
+/* ObjectGetItem */
+#if CYTHON_USE_TYPE_SLOTS
+static PyObject *__Pyx_PyObject_GetIndex(PyObject *obj, PyObject* index) {
+    PyObject *runerr;
+    Py_ssize_t key_value;
+    PySequenceMethods *m = Py_TYPE(obj)->tp_as_sequence;
+    if (unlikely(!(m && m->sq_item))) {
+        PyErr_Format(PyExc_TypeError, "'%.200s' object is not subscriptable", Py_TYPE(obj)->tp_name);
+        return NULL;
+    }
+    key_value = __Pyx_PyIndex_AsSsize_t(index);
+    if (likely(key_value != -1 || !(runerr = PyErr_Occurred()))) {
+        return __Pyx_GetItemInt_Fast(obj, key_value, 0, 1, 1);
+    }
+    if (PyErr_GivenExceptionMatches(runerr, PyExc_OverflowError)) {
+        PyErr_Clear();
+        PyErr_Format(PyExc_IndexError, "cannot fit '%.200s' into an index-sized integer", Py_TYPE(index)->tp_name);
+    }
+    return NULL;
+}
+static PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject* key) {
+    PyMappingMethods *m = Py_TYPE(obj)->tp_as_mapping;
+    if (likely(m && m->mp_subscript)) {
+        return m->mp_subscript(obj, key);
+    }
+    return __Pyx_PyObject_GetIndex(obj, key);
+}
+#endif
+
+/* PyObjectCallNoArg */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
+#if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(func)) {
+        return __Pyx_PyFunction_FastCall(func, NULL, 0);
+    }
+#endif
+#ifdef __Pyx_CyFunction_USED
+    if (likely(PyCFunction_Check(func) || __Pyx_CyFunction_Check(func)))
+#else
+    if (likely(PyCFunction_Check(func)))
+#endif
+    {
+        if (likely(PyCFunction_GET_FLAGS(func) & METH_NOARGS)) {
+            return __Pyx_PyObject_CallMethO(func, NULL);
+        }
+    }
+    return __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL);
 }
 #endif
 
@@ -2829,20 +3839,6 @@ static PyObject* __Pyx_ImportFrom(PyObject* module, PyObject* name) {
         #endif
     }
     return value;
-}
-
-/* GetBuiltinName */
-static PyObject *__Pyx_GetBuiltinName(PyObject *name) {
-    PyObject* result = __Pyx_PyObject_GetAttrStr(__pyx_b, name);
-    if (unlikely(!result)) {
-        PyErr_Format(PyExc_NameError,
-#if PY_MAJOR_VERSION >= 3
-            "name '%U' is not defined", name);
-#else
-            "name '%.200s' is not defined", PyString_AS_STRING(name));
-#endif
-    }
-    return result;
 }
 
 /* PyDictVersioning */
@@ -3190,52 +4186,6 @@ static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
         return (target_type) value;\
     }
 
-/* ObjectAsPyUnicode */
-static CYTHON_INLINE Py_UNICODE __Pyx_PyObject_AsPy_UNICODE(PyObject* x) {
-    long ival;
-    #if CYTHON_PEP393_ENABLED
-    #if Py_UNICODE_SIZE > 2
-    const long maxval = 1114111;
-    #else
-    const long maxval = 65535;
-    #endif
-    #else
-    static long maxval = 0;
-    #endif
-    if (PyUnicode_Check(x)) {
-        if (unlikely(__Pyx_PyUnicode_GET_LENGTH(x) != 1)) {
-            PyErr_Format(PyExc_ValueError,
-                         "only single character unicode strings can be converted to Py_UNICODE, "
-                         "got length %" CYTHON_FORMAT_SSIZE_T "d", __Pyx_PyUnicode_GET_LENGTH(x));
-            return (Py_UNICODE)-1;
-        }
-        #if CYTHON_PEP393_ENABLED
-        ival = PyUnicode_READ_CHAR(x, 0);
-        #else
-        return PyUnicode_AS_UNICODE(x)[0];
-        #endif
-    } else {
-        #if !CYTHON_PEP393_ENABLED
-        if (unlikely(!maxval))
-            maxval = (long)PyUnicode_GetMax();
-        #endif
-        ival = __Pyx_PyInt_As_long(x);
-    }
-    if (unlikely(!__Pyx_is_valid_index(ival, maxval + 1))) {
-        if (ival < 0) {
-            if (!PyErr_Occurred())
-                PyErr_SetString(PyExc_OverflowError,
-                                "cannot convert negative value to Py_UNICODE");
-            return (Py_UNICODE)-1;
-        } else {
-            PyErr_SetString(PyExc_OverflowError,
-                            "value too large to convert to Py_UNICODE");
-        }
-        return (Py_UNICODE)-1;
-    }
-    return (Py_UNICODE)ival;
-}
-
 /* CIntFromPy */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
     const int neg_one = (int) ((int) 0 - (int) 1), const_zero = (int) 0;
@@ -3423,6 +4373,195 @@ raise_neg_overflow:
     PyErr_SetString(PyExc_OverflowError,
         "can't convert negative value to int");
     return (int) -1;
+}
+
+/* CIntFromPy */
+static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *x) {
+    const size_t neg_one = (size_t) ((size_t) 0 - (size_t) 1), const_zero = (size_t) 0;
+    const int is_unsigned = neg_one > const_zero;
+#if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_Check(x))) {
+        if (sizeof(size_t) < sizeof(long)) {
+            __PYX_VERIFY_RETURN_INT(size_t, long, PyInt_AS_LONG(x))
+        } else {
+            long val = PyInt_AS_LONG(x);
+            if (is_unsigned && unlikely(val < 0)) {
+                goto raise_neg_overflow;
+            }
+            return (size_t) val;
+        }
+    } else
+#endif
+    if (likely(PyLong_Check(x))) {
+        if (is_unsigned) {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (size_t) 0;
+                case  1: __PYX_VERIFY_RETURN_INT(size_t, digit, digits[0])
+                case 2:
+                    if (8 * sizeof(size_t) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) >= 2 * PyLong_SHIFT) {
+                            return (size_t) (((((size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0]));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(size_t) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) >= 3 * PyLong_SHIFT) {
+                            return (size_t) (((((((size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0]));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(size_t) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) >= 4 * PyLong_SHIFT) {
+                            return (size_t) (((((((((size_t)digits[3]) << PyLong_SHIFT) | (size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0]));
+                        }
+                    }
+                    break;
+            }
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON
+            if (unlikely(Py_SIZE(x) < 0)) {
+                goto raise_neg_overflow;
+            }
+#else
+            {
+                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+                if (unlikely(result < 0))
+                    return (size_t) -1;
+                if (unlikely(result == 1))
+                    goto raise_neg_overflow;
+            }
+#endif
+            if (sizeof(size_t) <= sizeof(unsigned long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, unsigned long, PyLong_AsUnsignedLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(size_t) <= sizeof(unsigned PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+#endif
+            }
+        } else {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (size_t) 0;
+                case -1: __PYX_VERIFY_RETURN_INT(size_t, sdigit, (sdigit) (-(sdigit)digits[0]))
+                case  1: __PYX_VERIFY_RETURN_INT(size_t,  digit, +digits[0])
+                case -2:
+                    if (8 * sizeof(size_t) - 1 > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 2 * PyLong_SHIFT) {
+                            return (size_t) (((size_t)-1)*(((((size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case 2:
+                    if (8 * sizeof(size_t) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 2 * PyLong_SHIFT) {
+                            return (size_t) ((((((size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case -3:
+                    if (8 * sizeof(size_t) - 1 > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 3 * PyLong_SHIFT) {
+                            return (size_t) (((size_t)-1)*(((((((size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(size_t) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 3 * PyLong_SHIFT) {
+                            return (size_t) ((((((((size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case -4:
+                    if (8 * sizeof(size_t) - 1 > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 4 * PyLong_SHIFT) {
+                            return (size_t) (((size_t)-1)*(((((((((size_t)digits[3]) << PyLong_SHIFT) | (size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(size_t) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(size_t, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(size_t) - 1 > 4 * PyLong_SHIFT) {
+                            return (size_t) ((((((((((size_t)digits[3]) << PyLong_SHIFT) | (size_t)digits[2]) << PyLong_SHIFT) | (size_t)digits[1]) << PyLong_SHIFT) | (size_t)digits[0])));
+                        }
+                    }
+                    break;
+            }
+#endif
+            if (sizeof(size_t) <= sizeof(long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, long, PyLong_AsLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(size_t) <= sizeof(PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(size_t, PY_LONG_LONG, PyLong_AsLongLong(x))
+#endif
+            }
+        }
+        {
+#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
+            PyErr_SetString(PyExc_RuntimeError,
+                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
+#else
+            size_t val;
+            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
+ #if PY_MAJOR_VERSION < 3
+            if (likely(v) && !PyLong_Check(v)) {
+                PyObject *tmp = v;
+                v = PyNumber_Long(tmp);
+                Py_DECREF(tmp);
+            }
+ #endif
+            if (likely(v)) {
+                int one = 1; int is_little = (int)*(unsigned char *)&one;
+                unsigned char *bytes = (unsigned char *)&val;
+                int ret = _PyLong_AsByteArray((PyLongObject *)v,
+                                              bytes, sizeof(val),
+                                              is_little, !is_unsigned);
+                Py_DECREF(v);
+                if (likely(!ret))
+                    return val;
+            }
+#endif
+            return (size_t) -1;
+        }
+    } else {
+        size_t val;
+        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
+        if (!tmp) return (size_t) -1;
+        val = __Pyx_PyInt_As_size_t(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to size_t");
+    return (size_t) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to size_t");
+    return (size_t) -1;
 }
 
 /* CIntToPy */

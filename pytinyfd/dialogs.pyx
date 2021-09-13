@@ -1,6 +1,9 @@
+from typing import List
 from typing import Optional
 
 from dialogs cimport *
+
+from libc.stdlib cimport  malloc, free
 
 # Icon types
 ICON_ERROR =    "error"
@@ -23,18 +26,39 @@ INPUT_TEXT = ""
 
 
 def  notify_popup(title: str, message: str, icon_type: str=ICON_INFO) -> int:
-    return tinyfd_notifyPopupW(title, message, icon_type)
+    title = title.encode()
+    message = message.encode()
+    icon_type = icon_type.encode()
+    return tinyfd_notifyPopup(title, message, icon_type)
 
 
 def message_box(title: str, message: str, dialog_type: str=DIALOG_TYPE_OK, icon_type: str=ICON_INFO, default_button: int=BUTTON_OK) -> int:
-    return tinyfd_messageBoxW(title, message, dialog_type, icon_type, default_button)
+    title = title.encode()
+    message = message.encode()
+    dialog_type = dialog_type.encode()
+    icon_type = icon_type.encode()
+    return tinyfd_messageBox(title, message, dialog_type, icon_type, default_button)
 
 def input_box(title: str, message: str, input_type: str=INPUT_TEXT) -> Optional[str]:
-    cdef wchar_t * data = tinyfd_inputBoxW(title, message, input_type)
+    title = title.encode()
+    message = message.encode()
+    input_type   = input_type.encode()
+    cdef char * data = tinyfd_inputBox(title, message, input_type)
     if data == NULL:
         return None
-    return data
+    return data.decode()
 
-def save_dialog(title: str, default_path_and_file: str, num_of_filter_patterns: int=0, filter_patterns: str="", filter_description: str="") -> Optional[str]:
-    cdef wchar_t * result = tinyfd_saveFileDialogW(title, default_path_and_file, num_of_filter_patterns, NULL, filter_description)
-    return result if result != NULL else None
+def save_dialog(title: str, default_path_and_file: str, filter_patterns: List[str]=[], filter_description: str="") -> Optional[str]:
+    c_title = title.encode()
+    c_path = default_path_and_file.encode()
+    c_description = filter_description.encode()
+    num_of_filter_patterns = len(filter_patterns)
+    cdef char ** c_filter_patterns = NULL
+    if num_of_filter_patterns > 0:
+        c_filter_patterns = <char **>malloc(num_of_filter_patterns * sizeof(char*))
+        for i in range(num_of_filter_patterns):
+            pattern = filter_patterns[i].encode()
+            c_filter_patterns[i] = pattern
+    cdef char * result = tinyfd_saveFileDialog(c_title, c_path, num_of_filter_patterns, c_filter_patterns, c_description)
+    free(c_filter_patterns)
+    return result.decode() if result != NULL else None

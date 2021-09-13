@@ -1,40 +1,38 @@
 cdef extern from "../lib/tinyfiledialogs.h":
 
-    ctypedef Py_UNICODE wchar_t
-
-    int tinyfd_notifyPopupW(
-        const wchar_t* aTitle,
-        const wchar_t* aMessage,
-        const wchar_t* aIconType
+    int tinyfd_notifyPopup(
+        const char* aTitle,
+        const char* aMessage,
+        const char* aIconType
     )
-    int tinyfd_messageBoxW(
-        const wchar_t* aTitle,
-        const wchar_t* aMessage,
-        const wchar_t* aDialogType,
-        const wchar_t* aIconType,
+    int tinyfd_messageBox(
+        const char* aTitle,
+        const char* aMessage,
+        const char* aDialogType,
+        const char* aIconType,
         int aDefaultButton
     )
-    wchar_t* tinyfd_inputBoxW(
-        const wchar_t* aTitle,
-        const wchar_t* aMessage,
-        const wchar_t* aDefaultInput
+    char* tinyfd_inputBox(
+        const char* aTitle,
+        const char* aMessage,
+        const char* aDefaultInput
     )
-    wchar_t* tinyfd_saveFileDialogW(
-        const wchar_t* aTitle,
-        const wchar_t* aDefaultPathAndFile,
+    char* tinyfd_saveFileDialog(
+        const char* aTitle,
+        const char* aDefaultPathAndFile,
         int aNumOfFilterPatterns,
-        const wchar_t** aFilterPatterns,
-        const wchar_t aSingleFilterDescription
+        const char** aFilterPatterns,
+        const char* aSingleFilterDescription
     )
-    wchar_t* tinyfd_openFileDialogW(
-        const wchar_t* aTitle,
-        const wchar_t* aDefaultPathAndFile,
+    char* tinyfd_openFileDialog(
+        const char* aTitle,
+        const char* aDefaultPathAndFile,
         int aNumOfFilterPatterns,
-        const wchar_t** aFilterPatterns,
-        const wchar_t aSingleFilterDescription,
+        const char** aFilterPatterns,
+        const char* aSingleFilterDescription,
         int aAllowMultipleSelects
     )
-    wchar_t* tinyfd_selectFolderW(
-        const wchar_t* aTitle,
-        const wchar_t* aDefaultPath
+    char* tinyfd_selectFolder(
+        const char* aTitle,
+        const char* aDefaultPath
     )

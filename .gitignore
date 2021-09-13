@@ -3,4 +3,5 @@ dist/
 pytinyfd/__pycache__/
 pytinyfd/*.pyd
 venv/
+*.egg-info
 *.pyd
