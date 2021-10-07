@@ -26,24 +26,27 @@ INPUT_TEXT = ""
 
 
 def  notify_popup(title: str, message: str, icon_type: str=ICON_INFO) -> int:
-    title = title.encode()
-    message = message.encode()
-    icon_type = icon_type.encode()
-    return tinyfd_notifyPopup(title, message, icon_type)
+    c_title = title.encode()
+    c_message = message.encode()
+    c_icon = icon_type.encode()
+    return tinyfd_notifyPopup(c_title, c_message, c_icon)
 
 
 def message_box(title: str, message: str, dialog_type: str=DIALOG_TYPE_OK, icon_type: str=ICON_INFO, default_button: int=BUTTON_OK) -> int:
-    title = title.encode()
-    message = message.encode()
-    dialog_type = dialog_type.encode()
-    icon_type = icon_type.encode()
-    return tinyfd_messageBox(title, message, dialog_type, icon_type, default_button)
+    c_title = title.encode()
+    c_message = message.encode()
+    c_dialog = dialog_type.encode()
+    c_icon = icon_type.encode()
+    return tinyfd_messageBox(c_title, c_message, c_dialog, c_icon, default_button)
 
-def input_box(title: str, message: str, input_type: str=INPUT_TEXT) -> Optional[str]:
-    title = title.encode()
-    message = message.encode()
-    input_type   = input_type.encode()
-    cdef char * data = tinyfd_inputBox(title, message, input_type)
+def input_box(title: str, message: str, input_type: Optional[str]=INPUT_TEXT) -> Optional[str]:
+    c_title = title.encode()
+    c_message = message.encode()
+    input_type   = input_type.encode() if input_type is not None else None
+    cdef char* c_input_type = NULL
+    if input_type is not None:
+        c_input_type = input_type
+    cdef char * data = tinyfd_inputBox(c_title, c_message, c_input_type)
     if data == NULL:
         return None
     return data.decode()
