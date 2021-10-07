@@ -1,0 +1,23 @@
+on:
+  push. {}
+  pull_request {}
+
+jobs:
+  build-windows:
+    runs-on: ${{ matrix.os }}
+    env:
+      BUILD_TINYFD: 1
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
+        architecture: ['x86', 'x64']
+    steps:
+      - uses: actions/checkout@v2
+      - name: set up python ${{ matrix.python-version }} on ${{ matrix.os }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+        run: pip install cython
+      - name: build:
+        run: python setup.py bdist_wheel
