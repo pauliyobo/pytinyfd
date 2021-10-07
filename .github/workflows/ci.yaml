@@ -21,5 +21,5 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: build
         run: |
-          pip install cython 
+          pip install cython wheel
           python setup.py bdist_wheel
