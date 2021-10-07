@@ -2,6 +2,7 @@ import os
 import sys
 from typing import List
 from typing import Optional
+from typing import Tuple
 
 from setuptools import setup, Extension, find_packages
 from Cython.Build import cythonize
@@ -30,7 +31,7 @@ def get_libraries() -> List[str]:
     
 
 
-def get_macros() -> List[tuple[str, Optional[str]]]:
+def get_macros() -> List[Tuple[str, Optional[str]]]:
     """
     returns list of macros that the extension needs to define
     """
