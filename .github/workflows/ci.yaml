@@ -3,7 +3,7 @@ on:
   pull_request: {}
 
 jobs:
-  build-windows:
+  build:
     runs-on: ${{ matrix.os }}
     env:
       BUILD_TINYFD: 1
