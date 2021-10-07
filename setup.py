@@ -1,6 +1,7 @@
 import os 
 import sys
 from typing import List
+from typing import Optional
 
 from setuptools import setup, Extension, find_packages
 from Cython.Build import cythonize
@@ -27,14 +28,21 @@ def get_libraries() -> List[str]:
         return "Shell32 User32 Comdlg32 Ole32".split(" ")
     return []
     
-macros = [
-    ("_WIN32", None),
-]
+
+
+def get_macros() -> List[tuple[str, Optional[str]]]:
+    """
+    returns list of macros that the extension needs to define
+    """
+    if sys.platform == "win32":
+        return [("_WIN32", None)]
+    return []
+    
 
 extensions = [Extension(
     "pytinyfd.dialogs",
     [get_source(), "lib/tinyfiledialogs.c"],
-    define_macros=macros,
+    define_macros=get_macros(),
     language_level=3,
     libraries=get_libraries(),
 )]
