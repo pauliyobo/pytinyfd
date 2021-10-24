@@ -32,7 +32,7 @@ cdef extern from "../lib/tinyfiledialogs.h":
         const char* aSingleFilterDescription,
         int aAllowMultipleSelects
     )
-    char* tinyfd_selectFolder(
+    char* tinyfd_selectFolderDialog(
         const char* aTitle,
         const char* aDefaultPath
     )

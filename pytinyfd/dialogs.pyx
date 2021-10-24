@@ -39,6 +39,7 @@ def message_box(title: str, message: str, dialog_type: str=DIALOG_TYPE_OK, icon_
     c_icon = icon_type.encode()
     return tinyfd_messageBox(c_title, c_message, c_dialog, c_icon, default_button)
 
+
 def input_box(title: str, message: str, input_type: Optional[str]=INPUT_TEXT) -> Optional[str]:
     c_title = title.encode()
     c_message = message.encode()
@@ -51,9 +52,10 @@ def input_box(title: str, message: str, input_type: Optional[str]=INPUT_TEXT) ->
         return None
     return data.decode()
 
+
 def save_dialog(title: str, default_path_and_file: str, filter_patterns: List[str]=[], filter_description: str="") -> Optional[str]:
     c_title = title.encode()
-    c_path = default_path_and_file.encode()
+    c_file = default_path_and_file.encode()
     c_description = filter_description.encode()
     num_of_filter_patterns = len(filter_patterns)
     cdef char ** c_filter_patterns = NULL
@@ -62,6 +64,34 @@ def save_dialog(title: str, default_path_and_file: str, filter_patterns: List[st
         for i in range(num_of_filter_patterns):
             pattern = filter_patterns[i].encode()
             c_filter_patterns[i] = pattern
-    cdef char * result = tinyfd_saveFileDialog(c_title, c_path, num_of_filter_patterns, c_filter_patterns, c_description)
+    cdef char * result = tinyfd_saveFileDialog(c_title, c_file, num_of_filter_patterns, c_filter_patterns, c_description)
     free(c_filter_patterns)
+    return result.decode() if result != NULL else None
+
+
+def open_file_dialog(title: str, default_file_path: str, filters: List[str] = [], description: str="", multiple_selects: bool = False) -> List[str]:
+    c_title = title.encode()
+    c_file = default_file_path.encode()
+    c_description = description.encode()
+    num_filters = len(filters)
+    cdef char** c_filters = NULL
+    if num_filters > 0:
+        c_filters = <char**> malloc( num_filters * sizeof(char*))
+    for i in range(num_filters):
+            filter = filters[i].encode()
+            c_filters[i] = filter
+    cdef char* result = tinyfd_openFileDialog(
+        c_title, c_file, num_filters, c_filters, c_description,
+        1 if multiple_selects else 0
+    )
+    free(c_filters)
+    if result == NULL:
+        return []
+    return [x for x in result.decode().split('|')]
+
+
+def select_folder(title: str="", default_path: str="") -> Optional[str]:
+    c_title = title.encode()
+    c_path = default_path.encode()
+    cdef char* result = tinyfd_selectFolderDialog(c_title, c_path)
     return result.decode() if result != NULL else None
