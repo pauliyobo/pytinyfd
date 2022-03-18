@@ -23,3 +23,8 @@ jobs:
         run: |
           pip install cython wheel
           python setup.py bdist_wheel
+      - name: upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: pytinyfd-${{ matrix.os }}-py${{ matrix.python-version }}-${{ matrix.architecture }}
+          path: dist/*
