@@ -1,5 +1,8 @@
+import os
+import pathlib
 from typing import List
 from typing import Optional
+from typing import Union
 
 from dialogs cimport *
 
@@ -23,6 +26,17 @@ BUTTON_OK = 1
 # Input types
 INPUT_PASSWORD  = None
 INPUT_TEXT = ""
+
+# Alias for path type
+Path = Union[str, bytes, os.PathLike, pathlib.Path]
+
+
+def get_path_value(path: Path) -> bytes:
+    if isinstance(path, bytes):
+        return path
+    if isinstance(path, str):
+        return path.encode()
+    return str(path).encode()
 
 
 def  notify_popup(title: str, message: str, icon_type: str=ICON_INFO) -> int:
@@ -69,9 +83,9 @@ def save_dialog(title: str, default_path_and_file: str, filter_patterns: List[st
     return result.decode() if result != NULL else None
 
 
-def open_file_dialog(title: str, default_file_path: str, filters: List[str] = [], description: str="", multiple_selects: bool = False) -> List[str]:
+def open_file_dialog(title: str, default_file_path: Path, filters: List[str] = [], description: str="", multiple_selects: bool = False) -> List[Path]:
     c_title = title.encode()
-    c_file = default_file_path.encode()
+    c_file = get_path_value(default_file_path)
     c_description = description.encode()
     num_filters = len(filters)
     cdef char** c_filters = NULL
@@ -87,11 +101,12 @@ def open_file_dialog(title: str, default_file_path: str, filters: List[str] = []
     free(c_filters)
     if result == NULL:
         return []
-    return [x for x in result.decode().split('|')]
+    return [pathlib.Path(x) for x in result.decode().split('|')]
 
 
-def select_folder(title: str="", default_path: str="") -> Optional[str]:
+def select_folder(title: str="", default_path: Path="") -> Optional[Path]:
     c_title = title.encode()
-    c_path = default_path.encode()
+    c_path = get_path_value(default_path)
     cdef char* result = tinyfd_selectFolderDialog(c_title, c_path)
-    return result.decode() if result != NULL else None
+    return pathlib.Path(result.decode()) if result != NULL else None
+
